@@ -1,0 +1,37 @@
+name: Discord PR Notification
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord Notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{
+                 \"embeds\": [{
+                   \"title\": \"새로운 PR이 등록되었습니다\",
+                   \"description\": \"**${{ github.event.pull_request.title }}**\",
+                   \"color\": 5814783,
+                   \"fields\": [
+                     {
+                       \"name\": \"작성자\",
+                       \"value\": \"${{ github.event.pull_request.user.login }}\",
+                       \"inline\": true
+                     },
+                     {
+                       \"name\": \"브랜치\",
+                       \"value\": \"\`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`\",
+                       \"inline\": true
+                     }
+                   ],
+                   \"url\": \"${{ github.event.pull_request.html_url }}\"
+                 }]
+               }" \
+               $DISCORD_WEBHOOK
