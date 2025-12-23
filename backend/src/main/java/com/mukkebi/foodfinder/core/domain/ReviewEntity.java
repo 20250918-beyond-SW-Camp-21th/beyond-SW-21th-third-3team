@@ -5,10 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.type.descriptor.jdbc.TinyIntJdbcType;
-
-import java.math.BigInteger;
-
 
 @Entity
 @Getter
@@ -17,7 +13,7 @@ import java.math.BigInteger;
 @Table(
         name = "review",
         indexes = {
-                @Index(name = "idx_review", columnList = "review", unique = true)
+            @Index(name="idx_review_user",columnList="userId")
         }
 )
 public class ReviewEntity extends BaseEntity {
@@ -26,12 +22,12 @@ public class ReviewEntity extends BaseEntity {
     private String content;
 
     @Column(nullable=false)
-    private TinyIntJdbcType rating;
+    private double rating;
 
     @Column(nullable=false)
-    private BigInteger user_id;
+    private Long userId;
 
     @Column(nullable=false)
-    private BigInteger recommendation_id;
+    private Long reconmmendationId;
 
 }
