@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "github_id", nullable = false, unique = true)
     private String githubId;
 
-    @Column(nullable = false)
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
     @Builder
