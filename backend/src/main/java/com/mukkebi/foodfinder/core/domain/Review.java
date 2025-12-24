@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
                 @Index(name="idx_review_restaurant",columnList="restaurant_id")
         }
 )
-public class ReviewEntity extends BaseEntity {
+public class Review extends BaseEntity {
 
     @Column(length = 1000)
     private String content;
@@ -29,15 +29,15 @@ public class ReviewEntity extends BaseEntity {
     @Column(nullable=false, name = "restaurant_id")
     private Long restaurantId;
 
-    protected ReviewEntity(String content, Double rating, Long userId, Long restaurantId) {
+    protected Review(String content, Double rating, Long userId, Long restaurantId) {
         this.content = content;
         this.rating = rating;
         this.userId = userId;
         this.restaurantId = restaurantId;
     }
 
-    public static ReviewEntity create(String content, Double rating, Long userId, Long restaurantId) {
-        return new ReviewEntity(content, rating, userId, restaurantId);
+    public static Review create(String content, Double rating, Long userId, Long restaurantId) {
+        return new Review(content, rating, userId, restaurantId);
     }
 
     public void update(String content, Double rating) {
