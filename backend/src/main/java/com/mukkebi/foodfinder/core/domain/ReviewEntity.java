@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Table(
         name = "reviews",
         indexes = {
-            @Index(name="idx_review_user",columnList="user_id")
+            @Index(name="idx_review_user",columnList="user_id"),
+                @Index(name="idx_review_restaurant",columnList="restaurant_id")
         }
 )
 public class ReviewEntity extends BaseEntity {
@@ -25,18 +26,18 @@ public class ReviewEntity extends BaseEntity {
     @Column(nullable=false, name = "user_id")
     private Long userId;
 
-    @Column(nullable=false, name = "recommendation_id")
-    private Long recommendationId;
+    @Column(nullable=false, name = "restaurant_id")
+    private Long restaurantId;
 
-    protected ReviewEntity(String content, Double rating, Long userId, Long recommendationId) {
+    protected ReviewEntity(String content, Double rating, Long userId, Long restaurantId) {
         this.content = content;
         this.rating = rating;
         this.userId = userId;
-        this.recommendationId = recommendationId;
+        this.restaurantId = restaurantId;
     }
 
-    public static ReviewEntity create(String content, Double rating, Long userId, Long recommendationId) {
-        return new ReviewEntity(content, rating, userId, recommendationId);
+    public static ReviewEntity create(String content, Double rating, Long userId, Long restaurantId) {
+        return new ReviewEntity(content, rating, userId, restaurantId);
     }
 
     public void update(String content, Double rating) {
