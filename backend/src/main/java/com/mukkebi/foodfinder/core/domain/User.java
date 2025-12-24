@@ -1,13 +1,14 @@
 package com.mukkebi.foodfinder.core.domain;
 
 import com.mukkebi.foodfinder.storage.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,10 +22,18 @@ public class User extends BaseEntity {
     @Column(name = "nickname", nullable = false)
     private String nickname;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserPreference> preferences = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAllergy> allergies = new ArrayList<>();
+
     @Builder
-    public User(String githubId, String nickname) {
+    public User(String githubId, String nickname, List<UserPreference> preferences, List<UserAllergy> allergies) {
         this.githubId = githubId;
         this.nickname = nickname;
+        this.preferences = preferences;
+        this.allergies = allergies;
     }
 }
 
