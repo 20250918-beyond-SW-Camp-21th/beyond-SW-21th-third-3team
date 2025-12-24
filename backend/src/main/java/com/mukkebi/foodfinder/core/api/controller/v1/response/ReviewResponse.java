@@ -9,5 +9,5 @@ public class ReviewResponse {
     String content;
     Double rating;
     Long userId;
-    Long recommendationId;
+    Long restaurantId;
 }
