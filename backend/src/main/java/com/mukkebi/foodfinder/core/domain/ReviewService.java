@@ -6,15 +6,11 @@ import com.mukkebi.foodfinder.core.support.error.CoreException;
 import com.mukkebi.foodfinder.core.support.error.ErrorType;
 import com.mukkebi.foodfinder.storage.ReviewRepository;
 import com.mukkebi.foodfinder.storage.UserRepository;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -79,7 +75,7 @@ public class ReviewService {
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
         reviewRepository.save(
-                ReviewEntity.create(
+                Review.create(
                         reviewRequest.getContent(),
                         reviewRequest.getRating(),
                         user.getId(),
@@ -102,7 +98,7 @@ public class ReviewService {
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
-        ReviewEntity review = reviewRepository.findById(reviewId)
+        Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
         if (!review.getUserId().equals(user.getId())) {
@@ -126,7 +122,7 @@ public class ReviewService {
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
-        ReviewEntity review = reviewRepository.findById(reviewId)
+        Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
         if (!review.getUserId().equals(user.getId())) {
