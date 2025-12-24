@@ -1,5 +1,6 @@
 package com.mukkebi.foodfinder.core.domain;
 
+import com.mukkebi.foodfinder.core.enums.AllergyType;
 import com.mukkebi.foodfinder.storage.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
