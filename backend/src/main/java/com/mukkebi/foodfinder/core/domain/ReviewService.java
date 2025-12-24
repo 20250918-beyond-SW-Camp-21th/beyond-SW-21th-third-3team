@@ -9,6 +9,7 @@ import com.mukkebi.foodfinder.storage.UserRepository;
 import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +27,31 @@ public class ReviewService {
         this.userRepository = userRepository;
     }
 
-    //리뷰 가져오기
+    //리뷰 가져오기(음식점 별)
     @Transactional(readOnly = true)
-    public List<ReviewResponse> getMyReviews(String githubId) {
+    public List<ReviewResponse> getByRestaurant(Long restaurantId) {
+        return reviewRepository.findByRestaurantId(restaurantId).stream()
+                .map(r -> new ReviewResponse(
+                        r.getContent(),
+                        r.getRating(),
+                        r.getUserId(),
+                        r.getRestaurantId()
+                ))
+                .toList();
+    }
+
+
+    //리뷰 가져오기(자신의 리뷰)
+    @Transactional(readOnly = true)
+    public List<ReviewResponse> getMyReviews(OAuth2User oauth2User) {
+
+        //String githubId=oauth2User.getAttribute("login").toString();
+//             if (oauth2User == null) {
+//            throw new CoreException(ErrorType.DEFAULT_ERROR);
+//        }
+        String githubId="180543622";
+
+
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
@@ -37,14 +60,21 @@ public class ReviewService {
                         r.getContent(),
                         r.getRating(),
                         r.getUserId(),
-                        r.getRecommendationId()
+                        r.getRestaurantId()
                 ))
                 .toList();
     }
 
     //리뷰 등록
     @Transactional
-    public void saveReview(ReviewRequest reviewRequest, Long recommendationId, String githubId) {
+    public void saveReview(ReviewRequest reviewRequest, Long restaurantId, OAuth2User oauth2User) {
+
+        //String githubId=oauth2User.getAttribute("login").toString();
+//             if (oauth2User == null) {
+//            throw new CoreException(ErrorType.DEFAULT_ERROR);
+//        }
+        String githubId="180543622";
+
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
@@ -53,14 +83,22 @@ public class ReviewService {
                         reviewRequest.getContent(),
                         reviewRequest.getRating(),
                         user.getId(),
-                        recommendationId
+                        restaurantId
                 )
         );
     }
 
     //리뷰 수정
     @Transactional
-    public void updateReview(ReviewRequest reviewRequest, Long reviewId, String githubId) {
+    public void updateReview(ReviewRequest reviewRequest, Long reviewId, OAuth2User oauth2User) {
+
+        //String githubId=oauth2User.getAttribute("login").toString();
+//             if (oauth2User == null) {
+//            throw new CoreException(ErrorType.DEFAULT_ERROR);
+//        }
+        String githubId="180543622";
+
+
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
@@ -76,7 +114,15 @@ public class ReviewService {
 
     //리뷰 삭제
     @Transactional
-    public void deleteReview(Long reviewId, String githubId) {
+    public void deleteReview(Long reviewId, OAuth2User oauth2User) {
+
+//String githubId=oauth2User.getAttribute("login").toString();
+//             if (oauth2User == null) {
+//            throw new CoreException(ErrorType.DEFAULT_ERROR);
+//        }
+        String githubId="180543622";
+
+
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
