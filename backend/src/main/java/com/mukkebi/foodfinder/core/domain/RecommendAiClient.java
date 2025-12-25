@@ -3,7 +3,6 @@ package com.mukkebi.foodfinder.core.domain;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mukkebi.foodfinder.core.api.config.OpenAiProperties;
-import com.mukkebi.foodfinder.core.api.controller.v1.response.AiRecommendResponse;
 import com.mukkebi.foodfinder.core.support.error.CoreException;
 import com.mukkebi.foodfinder.core.support.error.ErrorType;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +13,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 import java.util.Map;
 
+/*
+ * AI 기반 음식점 추천 클라이언트
+ * OpenAI API를 호출하여 사용자 취향에 맞는 음식점을 추천
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OpenAiClient {
+public class RecommendAiClient {
 
     private final WebClient openAiWebClient;
     private final OpenAiProperties openAiProperties;
@@ -25,7 +28,12 @@ public class OpenAiClient {
 
     private static final int MAX_RETRY = 2;
 
-    public AiRecommendResponse requestRecommendation(String prompt) {
+    /*
+     * AI에게 음식점 추천 요청
+     * @param prompt 프롬프트 (해시태그 설명 + 음식점 후보 목록)
+     * @return AI 추천 결과 (restaurantId, restaurantName, menu, reason)
+     */
+    public AiRecommendResult requestRecommendation(String prompt) {
         for (int attempt = 1; attempt <= MAX_RETRY; attempt++) {
             try {
                 String response = callOpenAi(prompt);
@@ -67,10 +75,10 @@ public class OpenAiClient {
         }
     }
 
-    private AiRecommendResponse parseResponse(String content) {
+    private AiRecommendResult parseResponse(String content) {
         try {
             String jsonContent = extractJson(content);
-            return objectMapper.readValue(jsonContent, AiRecommendResponse.class);
+            return objectMapper.readValue(jsonContent, AiRecommendResult.class);
         } catch (Exception e) {
             log.error("AI 응답 파싱 실패: {}", content);
             throw new CoreException(ErrorType.DEFAULT_ERROR, "AI 응답 파싱에 실패했습니다.");
@@ -89,5 +97,16 @@ public class OpenAiClient {
             content = content.substring(0, content.length() - 3);
         }
         return content.trim();
+    }
+
+    /**
+     * AI 추천 결과 (내부용)
+     */
+    public record AiRecommendResult(
+            String restaurantId,
+            String restaurantName,
+            String menu,
+            String reason
+    ) {
     }
 }

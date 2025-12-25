@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record AiRecommendRequest(
+public record RecommendRequest(
         @NotNull(message = "위도는 필수입니다")
         Double latitude,
 
