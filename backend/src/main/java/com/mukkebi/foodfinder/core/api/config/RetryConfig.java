@@ -1,6 +1,7 @@
 package com.mukkebi.foodfinder.core.api.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.annotation.EnableRetry;
 
 @Configuration
 @EnableRetry
