@@ -1,0 +1,134 @@
+package com.mukkebi.foodfinder.core.domain;
+
+import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewListResponse;
+import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewResponse;
+import com.mukkebi.foodfinder.core.support.error.CoreException;
+import com.mukkebi.foodfinder.core.support.error.ErrorType;
+import com.mukkebi.foodfinder.storage.ReviewRepository;
+import com.mukkebi.foodfinder.storage.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+@Service
+public class ReaderService {
+
+    private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
+
+    //음식점 리뷰 조회
+    @Transactional(readOnly = true)
+    public ReviewListResponse getByRestaurant(Long restaurantId, Long cursorId) {
+
+        int limit = 20;
+
+        List<Review> reviews =
+                reviewRepository.findByRestaurantWithCursor(
+                        restaurantId,
+                        cursorId,
+                        PageRequest.of(0, limit + 1)
+                );
+
+        boolean hasNext = reviews.size() > limit;
+
+        if (hasNext) {
+            reviews = reviews.subList(0, limit);
+        }
+
+        Long nextCursor = reviews.isEmpty()
+                ? null
+                : reviews.get(reviews.size() - 1).getId();
+
+        List<ReviewResponse> responses = reviews.stream()
+                .map(this::toResponse)
+                .toList();
+
+        Double averageRating =
+                reviewRepository.findAverageRatingByRestaurantId(restaurantId);
+
+        return new ReviewListResponse(
+                responses,
+                averageRating,
+                nextCursor,
+                hasNext
+        );
+    }
+
+
+   //내 리뷰 조회
+    @Transactional(readOnly = true)
+    public ReviewListResponse getMyReviews(
+            OAuth2User oauth2User,
+            Long cursorId
+    ) {
+        String githubId = "180543622";
+        User user = userRepository.findByGithubId(githubId)
+                .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
+
+        int limit = 20;
+
+        List<Review> reviews =
+                reviewRepository.findByUserWithCursor(
+                        user.getId(),
+                        cursorId,
+                        PageRequest.of(0, limit + 1)
+                );
+
+        boolean hasNext = reviews.size() > limit;
+
+        if (hasNext) {
+            reviews = reviews.subList(0, limit);
+        }
+
+        Long nextCursor = reviews.isEmpty()
+                ? null
+                : reviews.get(reviews.size() - 1).getId();
+
+        List<ReviewResponse> responses = reviews.stream()
+                .map(this::toResponse)
+                .toList();
+
+        Double averageRating =
+                reviewRepository.findAverageRatingByUserId(user.getId());
+
+        return new ReviewListResponse(
+                responses,
+                averageRating,
+                nextCursor,
+                hasNext
+        );
+    }
+
+
+//  /*AI용*/
+//    //음식점별
+//    @Transactional(readOnly = true)
+//    public List<Review> getReviewsForAI(Long restaurantId) {
+//        return reviewRepository.findTop20ByRestaurantIdOrderByCreatedAtDesc(restaurantId);
+//    }
+//
+//    //유저별
+//    @Transactional(readOnly = true)
+//    public List<Review> getReviewsForAI2(Long userId) {
+//        return reviewRepository.findTop20ByUserIdOrderByCreatedAtDesc(userId);
+//    }
+//
+
+    private ReviewResponse toResponse(Review review) {
+
+        User user = userRepository.findById(review.getUserId())
+                .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
+
+        return new ReviewResponse(
+                review.getContent(),
+                review.getRating(),
+                user.getNickname(),
+                review.getRestaurantId()
+        );
+    }
+}

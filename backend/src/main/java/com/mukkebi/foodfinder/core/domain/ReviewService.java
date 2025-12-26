@@ -20,35 +20,6 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
 
-    //리뷰 가져오기(음식점 별)
-    @Transactional(readOnly = true)
-    public List<ReviewResponse> getByRestaurant(Long restaurantId) {
-        return reviewRepository.findByRestaurantId(restaurantId).stream()
-                .map(ReviewResponse::from
-                )
-                .toList();
-    }
-
-
-    //리뷰 가져오기(자신의 리뷰)
-    @Transactional(readOnly = true)
-    public List<ReviewResponse> getMyReviews(OAuth2User oauth2User) {
-
-        //String githubId=oauth2User.getAttribute("login").toString();
-//             if (oauth2User == null) {
-//            throw new CoreException(ErrorType.DEFAULT_ERROR);
-//        }
-        String githubId="180543622";
-
-
-        User user = userRepository.findByGithubId(githubId)
-                .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
-
-        return reviewRepository.findByUserId(user.getId()).stream()
-                .map(ReviewResponse::from
-                )
-                .toList();
-    }
 
     //리뷰 등록
     @Transactional
@@ -107,7 +78,6 @@ public class ReviewService {
 //        }
         String githubId="180543622";
 
-
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
@@ -120,8 +90,4 @@ public class ReviewService {
 
         reviewRepository.delete(review);
     }
-
-
-
-
 }
