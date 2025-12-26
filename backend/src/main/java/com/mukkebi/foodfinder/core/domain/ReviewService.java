@@ -2,6 +2,7 @@ package com.mukkebi.foodfinder.core.domain;
 
 import com.mukkebi.foodfinder.core.api.controller.v1.request.ReviewRequest;
 import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewResponse;
+import com.mukkebi.foodfinder.core.enums.EntityStatus;
 import com.mukkebi.foodfinder.core.support.error.CoreException;
 import com.mukkebi.foodfinder.core.support.error.ErrorType;
 import com.mukkebi.foodfinder.storage.ReviewRepository;
@@ -20,35 +21,6 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
 
-    //리뷰 가져오기(음식점 별)
-    @Transactional(readOnly = true)
-    public List<ReviewResponse> getByRestaurant(Long restaurantId) {
-        return reviewRepository.findByRestaurantId(restaurantId).stream()
-                .map(ReviewResponse::from
-                )
-                .toList();
-    }
-
-
-    //리뷰 가져오기(자신의 리뷰)
-    @Transactional(readOnly = true)
-    public List<ReviewResponse> getMyReviews(OAuth2User oauth2User) {
-
-        //String githubId=oauth2User.getAttribute("login").toString();
-//             if (oauth2User == null) {
-//            throw new CoreException(ErrorType.DEFAULT_ERROR);
-//        }
-        String githubId="180543622";
-
-
-        User user = userRepository.findByGithubId(githubId)
-                .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
-
-        return reviewRepository.findByUserId(user.getId()).stream()
-                .map(ReviewResponse::from
-                )
-                .toList();
-    }
 
     //리뷰 등록
     @Transactional
@@ -62,7 +34,9 @@ public class ReviewService {
 
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
-
+        if(reviewRequest.getRating()<1||reviewRequest.getRating()>5) {
+            throw new CoreException(ErrorType.DEFAULT_ERROR);
+        }
         reviewRepository.save(
                 Review.create(
                         reviewRequest.getContent(),
@@ -94,6 +68,10 @@ public class ReviewService {
             throw new CoreException(ErrorType.DEFAULT_ERROR);
         }
 
+        if(reviewRequest.getRating()<1||reviewRequest.getRating()>5) {
+            throw new CoreException(ErrorType.DEFAULT_ERROR);
+        }
+
         review.update(reviewRequest.getContent(), reviewRequest.getRating());
     }
 
@@ -107,7 +85,6 @@ public class ReviewService {
 //        }
         String githubId="180543622";
 
-
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR));
 
@@ -117,11 +94,6 @@ public class ReviewService {
         if (!review.getUserId().equals(user.getId())) {
             throw new CoreException(ErrorType.DEFAULT_ERROR);
         }
-
-        reviewRepository.delete(review);
+        review.deleted();
     }
-
-
-
-
 }

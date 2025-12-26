@@ -1,7 +1,9 @@
 package com.mukkebi.foodfinder.core.api.controller.v1;
 
 import com.mukkebi.foodfinder.core.api.controller.v1.request.ReviewRequest;
-import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewResponse;
+import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewListResponseByRestaurant;
+import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewListResponseByUser;
+import com.mukkebi.foodfinder.core.domain.ReviewReader;
 import com.mukkebi.foodfinder.core.domain.ReviewService;
 import com.mukkebi.foodfinder.core.support.response.ApiResult;
 import lombok.RequiredArgsConstructor;
@@ -9,15 +11,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @RestController
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ReviewReader reviewReader;
 
-    //후기 작성
+    //리뷰 작성
     @PostMapping("/api/v1/reviews/{restaurantId}")
     public ApiResult<?> postReview(
             @RequestBody ReviewRequest reviewRequest,
@@ -28,7 +29,7 @@ public class ReviewController {
         return ApiResult.success();
     }
 
-    //후기 수정
+    //리뷰 수정
     @PutMapping("/api/v1/reviews/{reviewId}")
     public ApiResult<?> updateReview(
             @RequestBody ReviewRequest reviewRequest,
@@ -39,7 +40,7 @@ public class ReviewController {
         return ApiResult.success();
     }
 
-    //후기 삭제
+    //리뷰 삭제
     @DeleteMapping("/api/v1/reviews/{reviewId}")
     public ApiResult<?> deleteReview(
             @PathVariable Long reviewId,
@@ -49,18 +50,29 @@ public class ReviewController {
         return ApiResult.success();
     }
 
-    // 내 후기 조회
+   //내 리뷰 조회
     @GetMapping("/api/v1/reviews/me")
-    public ApiResult<List<ReviewResponse>> getReviewsByUser(
-            @AuthenticationPrincipal OAuth2User oauth2User
+    public ApiResult<ReviewListResponseByUser> getMyReviews(
+            @AuthenticationPrincipal OAuth2User oauth2User,
+            @RequestParam(required = false) Long cursorId
     ) {
-        return ApiResult.success(reviewService.getMyReviews(oauth2User));
+        return ApiResult.success(
+                reviewReader.getMyReviews(oauth2User, cursorId)
+        );
     }
 
-    //음식점별 후기 조회
-    @GetMapping("/api/v1/reviews/restaurants/{restaurantId}")
-    public ApiResult<List<ReviewResponse>> getReviewsByRestaurant(@PathVariable Long restaurantId) {
-        return ApiResult.success(reviewService.getByRestaurant(restaurantId));
+
+    //음식점 리뷰 조회
+    @GetMapping("/api/v1/restaurants/review/{restaurantId}")
+    public ApiResult<ReviewListResponseByRestaurant> getReviewsByRestaurant(
+            @PathVariable Long restaurantId,
+            @RequestParam(required = false) Long cursorId
+    ) {
+        return ApiResult.success(
+                reviewReader.getByRestaurant(restaurantId, cursorId)
+        );
     }
+
+
 
 }
