@@ -49,6 +49,9 @@ public class Recommend extends BaseEntity {
     @Column(name = "menu", length = 255)
     private String menu;
 
+    @Column(name = "result", nullable = false)
+    private String result;
+
     @Builder
     private Recommend(Long userId, Long restaurantId, String restaurantName, String category,
                       String address, String roadAddress, Double latitude, Double longitude,
