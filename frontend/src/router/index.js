@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import('@/views/HomeView.vue'),
-  },
-  {
-    path: '/login',
     name: 'Login',
     component: () => import('@/views/LoginView.vue'),
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: () => import('@/views/HomeView.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/search',
@@ -62,12 +64,13 @@ const router = createRouter({
 
 // 네비게이션 가드 (인증 체크)
 router.beforeEach((to, from, next) => {
-  // TODO: 실제 인증 상태 체크 로직 구현
-  // const isAuthenticated = store.getters.isAuthenticated
-  const isAuthenticated = true // 개발 중 임시로 true
+  const userStore = useUserStore()
+  const isAuthenticated = userStore.isAuthenticated
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login')
+    next('/')
+  } else if (to.name === 'Login' && isAuthenticated) {
+    next('/home')
   } else {
     next()
   }

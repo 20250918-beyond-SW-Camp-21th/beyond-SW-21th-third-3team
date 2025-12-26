@@ -9,6 +9,14 @@ const api = axios.create({
 export const restaurantApi = {
 
     /**
+     * 식사 시간대별 해시태그 목록 조회
+     * @param {string} mealType - 식사 시간대 (BREAKFAST, LUNCH, DINNER)
+     */
+    getHashTagsByMealType(mealType) {
+        return api.get('/hashtags', { params: { mealType } })
+    },
+
+    /**
      * 주변 음식점 검색
      * @param {number} latitude - 위도
      * @param {number} longitude - 경도
@@ -24,31 +32,20 @@ export const restaurantApi = {
 
     /**
      * AI 음식점 추천 요청
-     * @param {number} latitude - 위도
-     * @param {number} longitude - 경도
-     * @param {number} radius - 검색 범위 (미터)
+     * @param {Object} params - 추천 요청 파라미터
+     * @param {number} params.latitude - 위도
+     * @param {number} params.longitude - 경도
+     * @param {number} params.radius - 검색 범위 (미터, 100-500)
+     * @param {string[]} params.hashTagCodes - 해시태그 코드 목록 (필수, 최소 1개)
+     * @param {number[]} [params.excludeRestaurantIds] - 제외할 음식점 ID 목록
      */
-    getRecommendation(latitude, longitude, radius) {
-        return api.post('/restaurants/recommend', {
-            latitude,
-            longitude,
-            radius
-        })
-    },
-
-    /**
-     * 다른 음식점 추천 요청 (이전 추천 제외)
-     * @param {number} latitude - 위도
-     * @param {number} longitude - 경도
-     * @param {number} radius - 검색 범위 (미터)
-     * @param {string[]} excludeIds - 제외할 음식점 ID 목록
-     */
-    getAnotherRecommendation(latitude, longitude, radius, excludeIds = []) {
-        return api.post('/restaurants/recommend/another', {
+    getRecommendation({ latitude, longitude, radius, hashTagCodes, excludeRestaurantIds = [] }) {
+        return api.post('/ai/recommend', {
             latitude,
             longitude,
             radius,
-            excludeIds
+            hashTagCodes,
+            excludeRestaurantIds
         })
     },
 

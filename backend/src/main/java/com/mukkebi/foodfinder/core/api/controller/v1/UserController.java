@@ -1,5 +1,7 @@
 package com.mukkebi.foodfinder.core.api.controller.v1;
 
+import com.mukkebi.foodfinder.core.support.error.CoreException;
+import com.mukkebi.foodfinder.core.support.error.ErrorType;
 import com.mukkebi.foodfinder.core.support.response.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +26,9 @@ public class UserController {
     public ApiResult<Map<String, Object>> githubProfile(
             @AuthenticationPrincipal OAuth2User oauth2User
     ) {
+        if (oauth2User == null) {
+            throw new CoreException(ErrorType.UNAUTHORIZED);
+        }
         return ApiResult.success(oauth2User.getAttributes());
     }
 }

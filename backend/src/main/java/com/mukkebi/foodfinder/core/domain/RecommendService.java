@@ -32,7 +32,10 @@ public class RecommendService {
     @Transactional
     public RestaurantDetailResponse recommend(RecommendRequest request, OAuth2User oauth2User) {
         // 0. 사용자 정보 조회
-        String githubId = oauth2User != null ? oauth2User.getAttribute("id").toString() : "180543622";
+        if (oauth2User == null) {
+            throw new CoreException(ErrorType.UNAUTHORIZED);
+        }
+        String githubId = oauth2User.getAttribute("id").toString();
         User user = userRepository.findByGithubId(githubId)
                 .orElseThrow(() -> new CoreException(ErrorType.DEFAULT_ERROR, "사용자를 찾을 수 없습니다."));
 
@@ -113,14 +116,15 @@ public class RecommendService {
         }
         sb.append("\n");
 
-        // 음식점 후보 목록
+        // 음식점 후보 목록 (menuUrl 포함)
         sb.append("## 음식점 후보 목록 (JSON)\n");
         sb.append("```json\n[\n");
         for (int i = 0; i < restaurants.size(); i++) {
             Restaurant r = restaurants.get(i);
+            String menuUrl = r.placeUrl() + "#menuInfo";
             sb.append(String.format(
-                    "  {\"id\": \"%s\", \"name\": \"%s\", \"category\": \"%s\", \"distance\": %.0fm}",
-                    r.id(), r.name(), r.category(), r.distance()
+                    "  {\"id\": \"%s\", \"name\": \"%s\", \"category\": \"%s\", \"distance\": %.0fm, \"menuUrl\": \"%s\"}",
+                    r.id(), r.name(), r.category(), r.distance(), menuUrl
             ));
             if (i < restaurants.size() - 1) sb.append(",");
             sb.append("\n");
@@ -135,19 +139,25 @@ public class RecommendService {
             sb.append("\n\n");
         }
 
-        // 출력 규칙
+        // 메뉴 확인 방법 (신규 섹션)
+        sb.append("## 메뉴 확인 방법\n");
+        sb.append("1. 각 음식점의 menuUrl에 직접 접근하여 실제 메뉴를 확인하세요.\n");
+        sb.append("2. 메뉴 페이지에서 메뉴명을 파악하세요.\n");
+        sb.append("3. 사용자 취향에 맞는 메뉴가 있는 음식점을 선택하세요.\n\n");
+
+        // 출력 규칙 (개선)
         sb.append("## 출력 규칙\n");
-        sb.append("1. 위 후보 중에서 사용자 취향에 가장 적합한 음식점 1곳만 추천하세요.\n");
-        sb.append("2. 반드시 추천할 가게를 정한이후 출력 규칙을 따라라.\n");
-        sb.append("3. 카카오맵 api 호출결과의 placeUrl 의 링크로 들어가서 메뉴를 보고 메뉴를 추천하여라.\n");
-        sb.append("4. 추천 이유를 1~2문장으로 설명하세요.\n");
+        sb.append("1. 위 후보 중에서 사용자 취향에 가장 적합한 음식점 1곳만 추천하세요. 가까운 순으로 선택하지 말고 맛집 위주로 선택하세요.\n");
+        sb.append("2. 반드시 menuUrl에 접근하여 실제 메뉴를 확인한 후 추천하세요.\n");
+        sb.append("3. 실제 메뉴명을 응답에 포함하세요.\n");
+        sb.append("4. 해당 메뉴를 추천하는 이유를 1~2문장으로 설명하세요.\n");
         sb.append("5. 반드시 아래 JSON 형식으로만 응답하세요. 다른 텍스트는 포함하지 마세요.\n\n");
         sb.append("```json\n");
         sb.append("{\n");
         sb.append("  \"restaurantId\": \"음식점 ID\",\n");
         sb.append("  \"restaurantName\": \"음식점 이름\",\n");
-        sb.append("  \"menu\": \"추천 메뉴 (카테고리 기반 추측)\",\n");
-        sb.append("  \"reason\": \"추천 이유\"\n");
+        sb.append("  \"menu\": \"실제 메뉴명 (menuUrl에서 확인한 메뉴)\",\n");
+        sb.append("  \"reason\": \"추천 이유 (메뉴 기반 설명)\"\n");
         sb.append("}\n");
         sb.append("```");
 

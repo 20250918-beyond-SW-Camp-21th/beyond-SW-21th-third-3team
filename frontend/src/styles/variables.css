@@ -1,0 +1,394 @@
+/* Design System Variables - Food Finder v2 */
+/* Based on LoginView.vue design style */
+
+:root {
+  /* ========================================
+     Primary Colors (Orange Theme)
+     ======================================== */
+  --primary-color: #FF5722;
+  --primary-dark: #E64A19;
+  --primary-light: #FFCCBC;
+  --primary-bg: #FFF3E0;
+  --primary-gradient: linear-gradient(135deg, #FFF3E0 0%, #FFCCBC 50%, #FFE0B2 100%);
+  
+  /* ========================================
+     Neutral Colors
+     ======================================== */
+  --text-primary: #1a1a1a;
+  --text-secondary: #555;
+  --text-muted: #888;
+  --text-light: #aaa;
+  --text-placeholder: #999;
+  
+  --bg-white: #fff;
+  --bg-light: #FAFAFA;
+  --bg-gray: #f5f5f5;
+  --bg-hover: #f9f9f9;
+  
+  --border-color: #eee;
+  --border-light: #f0f0f0;
+  --divider-color: #ddd;
+  
+  /* ========================================
+     Accent Colors
+     ======================================== */
+  --accent-blue: #2196F3;
+  --accent-blue-light: #E3F2FD;
+  --accent-green: #4CAF50;
+  --accent-green-light: #E8F5E9;
+  --accent-purple: #9C27B0;
+  --accent-purple-light: #F3E5F5;
+  --accent-yellow: #FFC107;
+  --accent-cyan: #00BCD4;
+  
+  /* ========================================
+     Status Colors
+     ======================================== */
+  --success-color: #4CAF50;
+  --warning-color: #FFC107;
+  --error-color: #DC2626;
+  --error-bg: #FEE2E2;
+  --info-color: #2196F3;
+  
+  /* ========================================
+     Shadows
+     ======================================== */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-primary: 0 4px 12px rgba(255, 87, 34, 0.3);
+  
+  /* ========================================
+     Border Radius
+     ======================================== */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 50%;
+  
+  /* ========================================
+     Typography
+     ======================================== */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
+  --font-size-base: 14px;
+  --font-size-md: 15px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 28px;
+  --font-size-5xl: 32px;
+  --font-size-6xl: 36px;
+  --font-size-hero: 48px;
+  
+  /* ========================================
+     Transitions
+     ======================================== */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  --transition-bounce: 0.3s ease-out;
+  
+  /* ========================================
+     Layout
+     ======================================== */
+  --header-height: 64px;
+  --max-width: 1200px;
+  --content-padding: 24px;
+  --content-padding-mobile: 16px;
+  
+  /* ========================================
+     Breakpoints (for reference)
+     ======================================== */
+  /* --breakpoint-sm: 600px; */
+  /* --breakpoint-md: 768px; */
+  /* --breakpoint-lg: 900px; */
+  /* --breakpoint-xl: 1200px; */
+  
+  /* ========================================
+     Z-Index
+     ======================================== */
+  --z-dropdown: 50;
+  --z-sticky: 100;
+  --z-modal: 1000;
+  --z-tooltip: 1100;
+}
+
+/* ========================================
+   Global Styles
+   ======================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--bg-gray);
+  line-height: 1.5;
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+.card {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.card-hover {
+  transition: all var(--transition-normal);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.gradient-bg {
+  background: var(--primary-gradient);
+}
+
+.primary-text {
+  color: var(--primary-color);
+}
+
+.primary-bg {
+  background-color: var(--primary-bg);
+}
+
+/* ========================================
+   Semantic Color Variables (Alias)
+   ======================================== */
+:root {
+  --color-primary: var(--primary-color);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-bg);
+  --color-white: var(--bg-white);
+  --color-neutral-50: var(--bg-light);
+  --color-neutral-100: var(--bg-gray);
+  --color-neutral-200: var(--border-color);
+  --color-neutral-400: var(--text-light);
+  --color-neutral-500: var(--text-muted);
+  --color-neutral-600: var(--text-secondary);
+  --color-neutral-800: var(--text-primary);
+  --color-neutral-900: var(--text-primary);
+}
+
+/* ========================================
+   Global Animations
+   ======================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.4s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* ========================================
+   Page Transition Styles
+   ======================================== */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Fade transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Slide fade transition */
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+/* ========================================
+   Interactive Element Styles
+   ======================================== */
+.interactive {
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.interactive:hover {
+  transform: translateY(-2px);
+}
+
+.interactive:active {
+  transform: translateY(0);
+}
+
+/* Button hover effect */
+.btn-hover {
+  transition: all var(--transition-fast);
+}
+
+.btn-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-hover:active {
+  transform: translateY(0);
+}
+
+/* Card lift effect */
+.card-lift {
+  transition: all var(--transition-normal);
+}
+
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* ========================================
+   Element Plus Overrides
+   ======================================== */
+.el-button--primary {
+  --el-button-bg-color: var(--primary-color);
+  --el-button-border-color: var(--primary-color);
+  --el-button-hover-bg-color: var(--primary-dark);
+  --el-button-hover-border-color: var(--primary-dark);
+}
+
+.el-rate__icon {
+  --el-rate-fill-color: var(--primary-color);
+}
+
+.el-slider__bar {
+  background-color: var(--primary-color);
+}
+
+.el-slider__button {
+  border-color: var(--primary-color);
+}

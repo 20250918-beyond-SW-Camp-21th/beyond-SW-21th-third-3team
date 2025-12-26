@@ -6,6 +6,9 @@ import App from './App.vue'
 import router from './router'
 import axios from 'axios'
 
+// Design System CSS Variables
+import './styles/variables.css'
+
 // Axios 기본 설정
 axios.defaults.baseURL = '/api'
 axios.defaults.withCredentials = true

@@ -1,26 +1,26 @@
 <template>
   <div class="app-layout">
     <!-- 헤더 -->
-    <header class="app-header">
-      <div class="logo">
-        <img src="@/assets/logo.png" alt="Food Finder" class="logo-icon" />
-        <span class="logo-text">Food Finder</span>
-      </div>
-    </header>
+    <AppHeader />
 
     <!-- 메인 컨텐츠 영역 -->
     <main class="app-content">
-      <slot></slot>
+      <div class="content-wrapper">
+        <slot></slot>
+      </div>
     </main>
 
     <!-- 하단 영역 (필요 시 사용) -->
     <footer v-if="$slots.footer" class="app-footer">
-      <slot name="footer"></slot>
+      <div class="footer-wrapper">
+        <slot name="footer"></slot>
+      </div>
     </footer>
   </div>
 </template>
 
 <script setup>
+import AppHeader from './AppHeader.vue'
 </script>
 
 <style scoped>
@@ -28,36 +28,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #fff;
-  max-width: 430px;
-  margin: 0 auto;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
-
-/* 헤더 */
-.app-header {
-  padding: 16px 20px;
-  background: #fff;
-  border-bottom: 1px solid #eee;
-  flex-shrink: 0;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.logo-icon {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-}
-
-.logo-text {
-  font-size: 20px;
-  font-weight: 700;
-  color: #FF6B6B;
+  background-color: var(--bg-gray, #f5f5f5);
 }
 
 /* 메인 컨텐츠 */
@@ -65,12 +36,45 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding-top: calc(var(--header-height, 64px) + 24px);
+  padding-bottom: 24px;
+}
+
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: var(--max-width, 1200px);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--content-padding, 24px);
 }
 
 /* 하단 영역 */
 .app-footer {
   flex-shrink: 0;
-  background: #fff;
-  border-top: 1px solid #eee;
+  background: var(--bg-white, #fff);
+  border-top: 1px solid var(--border-color, #eee);
+  padding: 16px 0;
+}
+
+.footer-wrapper {
+  max-width: var(--max-width, 1200px);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--content-padding, 24px);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .content-wrapper,
+  .footer-wrapper {
+    padding: 0 var(--content-padding-mobile, 16px);
+  }
+  
+  .app-content {
+    padding-top: calc(var(--header-height, 64px) + 16px);
+    padding-bottom: 16px;
+  }
 }
 </style>
