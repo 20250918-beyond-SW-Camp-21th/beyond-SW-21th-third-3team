@@ -15,7 +15,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    // 회원 가입
+    // 회원가입
     public UserProfileResponse signUp(Long userId, UpdateProfileRequest request) {
 
         User user = userRepository.findById(userId)
@@ -27,6 +27,20 @@ public class UserService {
 
         applyProfile(user, request);
         user.completeSignup();
+
+        return UserProfileResponse.from(user);
+    }
+
+    // 회원 정보 조회
+    @Transactional(readOnly = true)
+    public UserProfileResponse getProfile(Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("회원정보를 찾을 수 없습니다: " + userId));
+
+        if (user.getUserStatus() != UserStatus.ACTIVE) {
+            throw new IllegalStateException("회원가입이 완료되지 않은 사용자입니다.");
+        }
 
         return UserProfileResponse.from(user);
     }
