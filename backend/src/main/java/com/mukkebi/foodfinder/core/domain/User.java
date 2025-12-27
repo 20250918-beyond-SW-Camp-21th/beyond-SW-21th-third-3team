@@ -1,5 +1,6 @@
 package com.mukkebi.foodfinder.core.domain;
 
+import com.mukkebi.foodfinder.core.enums.UserStatus;
 import com.mukkebi.foodfinder.storage.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -28,16 +29,17 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserAllergy> allergies = new ArrayList<>();
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+
     @Builder
-    public User(String githubId, String nickname, List<UserPreference> preferences, List<UserAllergy> allergies) {
+    public User(String githubId, String nickname, List<UserPreference> preferences, List<UserAllergy> allergies, UserStatus userStatus) {
         this.githubId = githubId;
         this.nickname = nickname;
         this.preferences = preferences;
         this.allergies = allergies;
-    }
-
-    public void changeNickname(String nickname) {
-        this.nickname = nickname;
+        this.userStatus = userStatus;
     }
 }
 
