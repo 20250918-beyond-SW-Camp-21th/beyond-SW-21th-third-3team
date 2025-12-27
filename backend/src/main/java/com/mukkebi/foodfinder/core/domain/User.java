@@ -45,5 +45,9 @@ public class User extends BaseEntity {
     public void completeSignup() {
         this.userStatus = UserStatus.ACTIVE;
     }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
 
