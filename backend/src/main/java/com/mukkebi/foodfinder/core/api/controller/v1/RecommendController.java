@@ -1,8 +1,8 @@
 package com.mukkebi.foodfinder.core.api.controller.v1;
 
-import com.mukkebi.foodfinder.core.api.controller.v1.request.RestaurantSearchRequest;
-import com.mukkebi.foodfinder.core.api.controller.v1.response.RestaurantResponse;
-import com.mukkebi.foodfinder.core.domain.RestaurantService;
+import com.mukkebi.foodfinder.core.api.controller.v1.request.RecommendRequest;
+import com.mukkebi.foodfinder.core.api.controller.v1.response.RestaurantDetailResponse;
+import com.mukkebi.foodfinder.core.domain.RecommendService;
 import com.mukkebi.foodfinder.core.support.response.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,14 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class RestaurantController {
-    private final RestaurantService restaurantService;
+public class RecommendController {
 
-    @PostMapping("/api/v1/restaurants/search")
-    public ApiResult<RestaurantResponse> searchNearbyRestaurants(
-            @Validated @RequestBody RestaurantSearchRequest request,
+    private final RecommendService recommendService;
+
+    @PostMapping("/api/v1/ai/recommend")
+    public ApiResult<RestaurantDetailResponse> recommend(
+            @Validated @RequestBody RecommendRequest request,
             @AuthenticationPrincipal OAuth2User oauth2User
     ) {
-        return ApiResult.success(restaurantService.searchNearbyRestaurants(request.latitude(), request.longitude(), request.radius()));
+        return ApiResult.success(recommendService.recommend(request, oauth2User));
     }
 }
