@@ -1,8 +1,8 @@
 package com.mukkebi.foodfinder.core.api.controller.v1;
 
 import com.mukkebi.foodfinder.core.api.controller.v1.request.ReviewRequest;
-import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewListResponseByRestaurant;
-import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewListResponseByUser;
+import com.mukkebi.foodfinder.core.api.controller.v1.response.RestaurantReviewListResponse;
+import com.mukkebi.foodfinder.core.api.controller.v1.response.UserReviewListResponse;
 import com.mukkebi.foodfinder.core.domain.ReviewReader;
 import com.mukkebi.foodfinder.core.domain.ReviewService;
 import com.mukkebi.foodfinder.core.support.response.ApiResult;
@@ -52,7 +52,7 @@ public class ReviewController {
 
    //내 리뷰 조회
     @GetMapping("/api/v1/reviews/me")
-    public ApiResult<ReviewListResponseByUser> getMyReviews(
+    public ApiResult<UserReviewListResponse> getMyReviews(
             @AuthenticationPrincipal OAuth2User oauth2User,
             @RequestParam(required = false) Long cursorId
     ) {
@@ -64,7 +64,7 @@ public class ReviewController {
 
     //음식점 리뷰 조회
     @GetMapping("/api/v1/restaurants/review/{restaurantId}")
-    public ApiResult<ReviewListResponseByRestaurant> getReviewsByRestaurant(
+    public ApiResult<RestaurantReviewListResponse> getReviewsByRestaurant(
             @PathVariable Long restaurantId,
             @RequestParam(required = false) Long cursorId
     ) {
