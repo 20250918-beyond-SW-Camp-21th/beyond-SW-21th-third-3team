@@ -1,7 +1,7 @@
 package com.mukkebi.foodfinder.core.domain;
 
-import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewListResponseByRestaurant;
-import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewListResponseByUser;
+import com.mukkebi.foodfinder.core.api.controller.v1.response.RestaurantReviewListResponse;
+import com.mukkebi.foodfinder.core.api.controller.v1.response.UserReviewListResponse;
 import com.mukkebi.foodfinder.core.api.controller.v1.response.ReviewResponse;
 import com.mukkebi.foodfinder.core.support.error.CoreException;
 import com.mukkebi.foodfinder.core.support.error.ErrorType;
@@ -26,7 +26,7 @@ public class ReviewReader {
 
     // 음식점 리뷰 조회
     @Transactional(readOnly = true)
-    public ReviewListResponseByRestaurant getByRestaurant(Long restaurantId, Long cursorId) {
+    public RestaurantReviewListResponse getByRestaurant(Long restaurantId, Long cursorId) {
 
         int limit = 20;
 
@@ -70,7 +70,7 @@ public class ReviewReader {
         Double averageRating =
                 reviewRepository.findAverageRatingByRestaurantId(restaurantId);
 
-        return new ReviewListResponseByRestaurant(
+        return new RestaurantReviewListResponse(
                 responses,
                 averageRating,
                 nextCursor,
@@ -80,7 +80,7 @@ public class ReviewReader {
 
     // 내 리뷰 조회
     @Transactional(readOnly = true)
-    public ReviewListResponseByUser getMyReviews(
+    public UserReviewListResponse getMyReviews(
             OAuth2User oauth2User,
             Long cursorId
     ) {
@@ -111,7 +111,7 @@ public class ReviewReader {
                 .map(review -> ReviewResponse.of(review, user))
                 .toList();
 
-        return new ReviewListResponseByUser(
+        return new UserReviewListResponse(
                 responses,
                 nextCursor,
                 hasNext

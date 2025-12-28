@@ -2,7 +2,7 @@ package com.mukkebi.foodfinder.core.api.controller.v1.response;
 
 import java.util.List;
 
-public record ReviewListResponseByUser(
+public record UserReviewListResponse(
     List<ReviewResponse> reviews,
     Long nextCursor,
     boolean hasNext
