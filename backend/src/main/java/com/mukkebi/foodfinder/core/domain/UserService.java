@@ -82,7 +82,6 @@ public class UserService {
                         UserPreference.builder()
                                 .user(user)
                                 .preferenceType(pr.preferenceType())
-                                .liked(pr.liked())
                                 .build()
                 );
             });
