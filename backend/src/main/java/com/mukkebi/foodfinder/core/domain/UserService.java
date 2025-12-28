@@ -75,18 +75,6 @@ public class UserService {
             user.changeNickname(request.nickname());
         }
 
-        if (request.preferences() != null) {
-            user.getPreferences().clear();
-            request.preferences().forEach(pr -> {
-                user.getPreferences().add(
-                        UserPreference.builder()
-                                .user(user)
-                                .preferenceType(pr.preferenceType())
-                                .build()
-                );
-            });
-        }
-
         if (request.allergies() != null) {
             user.getAllergies().clear();
             request.allergies().forEach(ar -> {
