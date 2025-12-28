@@ -1,5 +1,7 @@
-package com.mukkebi.foodfinder.core.domain;
+package com.mukkebi.foodfinder.core.support.security;
 
+import com.mukkebi.foodfinder.core.domain.User;
+import com.mukkebi.foodfinder.core.enums.UserStatus;
 import com.mukkebi.foodfinder.storage.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -29,10 +31,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     User newUser = User.builder()
                             .githubId(githubId.toString())
                             .nickname(login)
+                            .userStatus(UserStatus.PENDING)
                             .build();
                     return userRepository.save(newUser);
                 });
 
-        return oAuth2User;
+        return new OAuthUserPrincipal(
+                user.getId(),
+                oAuth2User.getAttributes()
+        );
     }
 }
