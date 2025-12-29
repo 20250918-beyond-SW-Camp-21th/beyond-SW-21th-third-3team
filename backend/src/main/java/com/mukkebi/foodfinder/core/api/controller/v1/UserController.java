@@ -18,13 +18,12 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/api/v1/users/signup")
-    public ApiResult<UserProfileResponse> signUp(
+    public ApiResult<?> signUp(
             @AuthenticationPrincipal OAuthUserPrincipal principal,
             @RequestBody UpdateProfileRequest request
     ) {
-        return ApiResult.success(
-                userService.signUp(principal.getUserId(), request)
-        );
+        userService.signUp(principal.getUserId(), request);
+        return ApiResult.success();
     }
 
     // 회원 정보 조회
