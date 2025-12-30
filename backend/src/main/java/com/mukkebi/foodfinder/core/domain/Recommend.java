@@ -5,14 +5,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "recommends")
 public class Recommend extends BaseEntity {
 
@@ -49,13 +47,30 @@ public class Recommend extends BaseEntity {
     @Column(name = "menu", length = 255)
     private String menu;
 
-    @Column(name = "result", nullable = false)
-    private String result;
+    @jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
+    @Column(name = "result")
+    private com.mukkebi.foodfinder.core.enums.RecommendationResult result;
 
-    @Builder
+    // --- [ Snapshot Fields ] ---
+
+    @Column(nullable = false)
+    private String restaurantNameAtTime;
+
+    @Column(nullable = false)
+    private String categoryAtTime;
+
+    @Column(nullable = false)
+    private Double distanceAtTime;
+
+    @Column(nullable = false)
+    private Double preferredDistanceAtTime; // 기본값 0.0 처리 예정
+
+    @lombok.Builder
     private Recommend(Long userId, Long restaurantId, String restaurantName, String category,
-                      String address, String roadAddress, Double latitude, Double longitude,
-                      Double distance, String reason, String menu, String result) {
+            String address, String roadAddress, Double latitude, Double longitude,
+            Double distance, String reason, String menu,
+            String restaurantNameAtTime, String categoryAtTime,
+            Double distanceAtTime, Double preferredDistanceAtTime) {
         this.userId = userId;
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
@@ -67,13 +82,16 @@ public class Recommend extends BaseEntity {
         this.distance = distance;
         this.reason = reason;
         this.menu = menu;
-        this.result = result;
+        this.restaurantNameAtTime = restaurantNameAtTime;
+        this.categoryAtTime = categoryAtTime;
+        this.distanceAtTime = distanceAtTime;
+        this.preferredDistanceAtTime = preferredDistanceAtTime;
     }
 
     public static Recommend create(Long userId, Long restaurantId, String restaurantName,
-                                   String category, String address, String roadAddress,
-                                   Double latitude, Double longitude, Double distance,
-                                   String reason, String menu) {
+            String category, String address, String roadAddress,
+            Double latitude, Double longitude, Double distance,
+            String reason, String menu) {
         return Recommend.builder()
                 .userId(userId)
                 .restaurantId(restaurantId)
@@ -86,6 +104,11 @@ public class Recommend extends BaseEntity {
                 .distance(distance)
                 .reason(reason)
                 .menu(menu)
+                // 스냅샷 필드 자동 주입
+                .restaurantNameAtTime(restaurantName)
+                .categoryAtTime(category)
+                .distanceAtTime(distance)
+                .preferredDistanceAtTime(0.0) // Service에서 알 수 없으므로 0.0 처리
                 .build();
     }
 }
