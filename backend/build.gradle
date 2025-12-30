@@ -34,6 +34,8 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.springframework:spring-aspects'
 
+    // Mac OS 네이티브 DNS 라이브러리
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.121.Final:osx-aarch_64'
     // Database
     runtimeOnly 'org.postgresql:postgresql'
 
