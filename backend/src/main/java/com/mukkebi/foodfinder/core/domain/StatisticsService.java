@@ -51,4 +51,9 @@ public class StatisticsService {
     public List<RecentActivityResponse> getRecentStats(Long userId) {
         return recommendRepository.findRecentStats(userId, 5); // 최근 5건 제한
     }
+
+    // 8. 홈 화면 통계
+    public com.mukkebi.foodfinder.core.api.controller.v1.response.HomeStatisticsResponse getHomeStats(Long userId) {
+        return recommendRepository.findHomeStats(userId);
+    }
 }

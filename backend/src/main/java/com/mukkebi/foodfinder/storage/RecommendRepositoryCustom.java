@@ -20,4 +20,6 @@ public interface RecommendRepositoryCustom {
 
     List<com.mukkebi.foodfinder.core.api.controller.v1.response.RecentActivityResponse> findRecentStats(Long userId,
             int limit);
+
+    com.mukkebi.foodfinder.core.api.controller.v1.response.HomeStatisticsResponse findHomeStats(Long userId);
 }

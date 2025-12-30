@@ -82,6 +82,13 @@ public class StatisticsController {
         return ApiResult.success(statisticsService.getRecentStats(userId));
     }
 
+    @GetMapping("/api/v1/stats/home")
+    public ApiResult<com.mukkebi.foodfinder.core.api.controller.v1.response.HomeStatisticsResponse> getHomeStats(
+            @AuthenticationPrincipal OAuth2User oauth2User) {
+        Long userId = resolveUserId(oauth2User);
+        return ApiResult.success(statisticsService.getHomeStats(userId));
+    }
+
     // --- [ Admin Endpoints: 전체/타인 통계 ] ---
 
     @GetMapping("/api/v1/stats/admin/weekly")
