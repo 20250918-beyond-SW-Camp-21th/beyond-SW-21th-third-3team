@@ -18,7 +18,7 @@ public class UserService {
     private final UserAllergyRepository userAllergyRepository;
 
     // 회원가입
-    public UserProfileResponse signUp(Long userId, UpdateProfileRequest request) {
+    public void signUp(Long userId, UpdateProfileRequest request) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("회원정보를 찾을 수 없습니다: " + userId));
@@ -29,8 +29,6 @@ public class UserService {
 
         applyProfile(user, request);
         user.completeSignup();
-
-        return UserProfileResponse.from(user, userAllergyRepository.findByUserId(userId));
     }
 
     // 회원 정보 조회
