@@ -44,7 +44,9 @@
         <div class="menu-list">
           <!-- 프로필 수정 -->
           <div class="menu-item" @click="openEditProfile">
-            <div class="menu-icon">👤</div>
+            <div class="menu-icon">
+              <el-icon :size="18"><User /></el-icon>
+            </div>
             <div class="menu-content">
               <span class="menu-label">프로필 수정</span>
               <span class="menu-desc">닉네임 변경</span>
@@ -54,7 +56,9 @@
 
           <!-- 알레르기 설정 -->
           <div class="menu-item" @click="openAllergySettings">
-            <div class="menu-icon">🍽️</div>
+            <div class="menu-icon">
+              <el-icon :size="18"><Dish /></el-icon>
+            </div>
             <div class="menu-content">
               <span class="menu-label">알레르기 설정</span>
               <span class="menu-desc">{{ allergyText }}</span>
@@ -64,7 +68,9 @@
 
           <!-- 내 리뷰 -->
           <div class="menu-item" @click="goTo('/reviews')">
-            <div class="menu-icon">⭐</div>
+            <div class="menu-icon">
+              <el-icon :size="18"><Star /></el-icon>
+            </div>
             <div class="menu-content">
               <span class="menu-label">내 리뷰</span>
               <span class="menu-desc">작성한 리뷰 관리</span>
@@ -74,7 +80,9 @@
 
           <!-- 통계 -->
           <div class="menu-item" @click="goTo('/statistics')">
-            <div class="menu-icon">📊</div>
+            <div class="menu-icon">
+              <el-icon :size="18"><DataAnalysis /></el-icon>
+            </div>
             <div class="menu-content">
               <span class="menu-label">활동 통계</span>
               <span class="menu-desc">내 활동 분석</span>
@@ -91,7 +99,9 @@
         <div class="menu-list">
           <!-- 로그아웃 -->
           <div class="menu-item" @click="handleLogout">
-            <div class="menu-icon">🚪</div>
+            <div class="menu-icon">
+              <el-icon :size="18"><SwitchButton /></el-icon>
+            </div>
             <div class="menu-content">
               <span class="menu-label">로그아웃</span>
             </div>
@@ -100,7 +110,9 @@
 
           <!-- 회원 탈퇴 -->
           <div class="menu-item danger" @click="confirmWithdraw">
-            <div class="menu-icon">⚠️</div>
+            <div class="menu-icon">
+              <el-icon :size="18"><Warning /></el-icon>
+            </div>
             <div class="menu-content">
               <span class="menu-label">회원 탈퇴</span>
             </div>
@@ -164,7 +176,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ArrowRight } from '@element-plus/icons-vue'
+import { ArrowRight, User, Dish, Star, DataAnalysis, SwitchButton, Warning } from '@element-plus/icons-vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { useUserStore } from '@/stores/user'
 import { userApi } from '@/api/user'
@@ -384,15 +396,17 @@ onMounted(() => {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  background: var(--color-bg-grouped, #f2f2f7);
+  min-height: 100%;
 }
 
 /* 프로필 카드 */
 .profile-card {
-  background: white;
+  background: var(--color-bg-primary, #ffffff);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--ios-card-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
 }
 
 .profile-header {
@@ -407,7 +421,7 @@ onMounted(() => {
   height: 64px;
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-primary, #007AFF);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -430,15 +444,15 @@ onMounted(() => {
 }
 
 .nickname {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 4px 0;
 }
 
 .email {
   font-size: 14px;
-  color: #999;
+  color: var(--color-text-tertiary, #8e8e93);
   margin: 0;
 }
 
@@ -447,7 +461,7 @@ onMounted(() => {
   align-items: center;
   justify-content: space-around;
   padding: 16px 0;
-  background: #f9f9f9;
+  background: var(--color-bg-secondary, #f2f2f7);
   border-radius: 12px;
 }
 
@@ -461,33 +475,35 @@ onMounted(() => {
 .stat-value {
   font-size: 24px;
   font-weight: 700;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
 }
 
 .stat-label {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-tertiary, #8e8e93);
 }
 
 .stat-divider {
-  width: 1px;
+  width: 0.5px;
   height: 32px;
-  background: #e0e0e0;
+  background: var(--color-separator, #e5e5ea);
 }
 
 /* 메뉴 섹션 */
 .menu-section {
-  background: white;
+  background: var(--color-bg-primary, #ffffff);
   border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 8px 0;
+  box-shadow: var(--ios-card-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
 }
 
 .section-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #999;
-  margin: 0 0 12px 4px;
+  color: var(--color-text-tertiary, #8e8e93);
+  margin: 8px 16px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .menu-list {
@@ -499,33 +515,28 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 4px;
+  padding: 12px 16px;
   cursor: pointer;
   transition: background 0.2s;
-  border-bottom: 1px solid #f5f5f5;
 }
 
-.menu-item:last-child {
-  border-bottom: none;
-}
-
-.menu-item:hover {
-  background: #f9f9f9;
+.menu-item:active {
+  background: var(--color-bg-secondary, #f2f2f7);
 }
 
 .menu-item.danger .menu-label {
-  color: #ff4d4f;
+  color: var(--color-danger, #ff3b30);
 }
 
 .menu-icon {
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f5f5;
+  background: var(--color-bg-secondary, #f2f2f7);
   border-radius: 10px;
+  color: var(--color-primary, #007AFF);
 }
 
 .menu-content {
@@ -536,18 +547,19 @@ onMounted(() => {
 }
 
 .menu-label {
-  font-size: 15px;
-  font-weight: 500;
-  color: #333;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-text-primary, #1c1c1e);
 }
 
 .menu-desc {
-  font-size: 12px;
-  color: #999;
+  font-size: 13px;
+  color: var(--color-text-tertiary, #8e8e93);
 }
 
 .menu-arrow {
-  color: #ccc;
+  color: var(--color-text-tertiary, #8e8e93);
+  font-size: 16px;
 }
 
 /* 수정 폼 */
@@ -563,7 +575,7 @@ onMounted(() => {
   display: block;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin-bottom: 8px;
 }
 
@@ -573,8 +585,8 @@ onMounted(() => {
 }
 
 .form-desc {
-  font-size: 13px;
-  color: #666;
+  font-size: 14px;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0 0 16px 0;
   line-height: 1.6;
 }
@@ -582,7 +594,7 @@ onMounted(() => {
 .allergy-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .allergy-item {
@@ -590,30 +602,45 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 12px 8px;
-  background: #f9f9f9;
-  border: 2px solid transparent;
-  border-radius: 12px;
+  padding: 14px 8px;
+  background: var(--color-bg-secondary, #f2f2f7);
+  border-radius: 14px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.allergy-item:hover {
-  background: #f0f0f0;
+.allergy-item:active {
+  transform: scale(0.96);
 }
 
 .allergy-item.selected {
-  background: #e6f7ff;
-  border-color: #409eff;
+  background: var(--color-primary, #007AFF);
+}
+
+.allergy-item.selected .allergy-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.allergy-item.selected .allergy-name {
+  color: #ffffff;
 }
 
 .allergy-icon {
-  font-size: 24px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-primary, #ffffff);
+  border-radius: 8px;
+  color: var(--color-text-secondary, #3c3c43);
 }
 
 .allergy-name {
   font-size: 12px;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   text-align: center;
+  font-weight: 500;
 }
 </style>

@@ -14,7 +14,9 @@
     <!-- 결과 없음 -->
     <div v-else-if="!restaurant" class="empty-state">
       <div class="empty-content">
-        <span class="empty-icon">🔍</span>
+        <div class="empty-icon">
+          <el-icon :size="24"><Search /></el-icon>
+        </div>
         <h3>추천 결과가 없습니다</h3>
         <p>조건을 변경하여 다시 시도해보세요</p>
       </div>
@@ -56,14 +58,14 @@
 
         <!-- AI 추천 이유 -->
         <div v-if="restaurant.recommend" class="recommend-reason">
-          <h4>🤖 AI 추천 이유</h4>
+          <h4>AI 추천 이유</h4>
           <p>{{ restaurant.recommend }}</p>
         </div>
       </div>
 
       <!-- 지도 -->
       <div class="map-section">
-        <h4 class="map-title">📍 위치</h4>
+        <h4 class="map-title">위치</h4>
         <div ref="mapContainer" class="map-container"></div>
       </div>
 
@@ -100,7 +102,7 @@
 <script setup>
 import { ref, watch, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { Loading, Location, Phone, Position } from '@element-plus/icons-vue'
+import { Loading, Location, Phone, Position, Search } from '@element-plus/icons-vue'
 import { loadKakaoMap } from '@/utils/kakaoMapLoader'
 
 const props = defineProps({
@@ -205,7 +207,7 @@ watch(() => props.restaurant, async (newVal) => {
 
 .loading-icon {
   animation: rotate 1s linear infinite;
-  color: #409eff;
+  color: var(--color-primary, #007AFF);
   margin-bottom: 16px;
 }
 
@@ -216,13 +218,13 @@ watch(() => props.restaurant, async (newVal) => {
 
 .loading-content h3 {
   font-size: 18px;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 8px 0;
 }
 
 .loading-content p {
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0;
 }
 
@@ -239,20 +241,26 @@ watch(() => props.restaurant, async (newVal) => {
 }
 
 .empty-icon {
-  font-size: 48px;
-  display: block;
-  margin-bottom: 16px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-secondary, #f2f2f7);
+  border-radius: 14px;
+  margin: 0 auto 16px;
+  color: var(--color-text-tertiary, #8e8e93);
 }
 
 .empty-content h3 {
   font-size: 18px;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 8px 0;
 }
 
 .empty-content p {
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0;
 }
 
@@ -265,10 +273,10 @@ watch(() => props.restaurant, async (newVal) => {
 
 /* 음식점 카드 */
 .restaurant-card {
-  background: white;
-  border-radius: 16px;
+  background: var(--color-bg-primary, #ffffff);
+  border-radius: 14px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--ios-card-shadow);
 }
 
 .restaurant-header {
@@ -279,7 +287,7 @@ watch(() => props.restaurant, async (newVal) => {
 }
 
 .restaurant-badge {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-primary, #007AFF);
   color: white;
   padding: 4px 12px;
   border-radius: 20px;
@@ -290,13 +298,14 @@ watch(() => props.restaurant, async (newVal) => {
 .restaurant-name {
   font-size: 22px;
   font-weight: 700;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
 }
 
 .restaurant-category {
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0 0 16px 0;
 }
 
@@ -312,16 +321,16 @@ watch(() => props.restaurant, async (newVal) => {
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #666;
+  color: var(--color-text-secondary, #3c3c43);
 }
 
 .info-item .el-icon {
-  color: #409eff;
+  color: var(--color-primary, #007AFF);
 }
 
 /* AI 추천 이유 */
 .recommend-reason {
-  background: #f8f9fa;
+  background: var(--color-bg-secondary, #f2f2f7);
   border-radius: 12px;
   padding: 16px;
 }
@@ -329,29 +338,29 @@ watch(() => props.restaurant, async (newVal) => {
 .recommend-reason h4 {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 8px 0;
 }
 
 .recommend-reason p {
   font-size: 13px;
-  color: #666;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0;
   line-height: 1.6;
 }
 
 /* 지도 섹션 */
 .map-section {
-  background: white;
-  border-radius: 16px;
+  background: var(--color-bg-primary, #ffffff);
+  border-radius: 14px;
   padding: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--ios-card-shadow);
 }
 
 .map-title {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 12px 0;
 }
 
@@ -374,6 +383,6 @@ watch(() => props.restaurant, async (newVal) => {
   height: 48px;
   font-size: 15px;
   font-weight: 500;
-  border-radius: 12px;
+  border-radius: 14px;
 }
 </style>

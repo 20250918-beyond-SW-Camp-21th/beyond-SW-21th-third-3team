@@ -13,8 +13,8 @@
 <style scoped>
 .app-header {
   padding: 16px 20px;
-  background: #fff;
-  border-bottom: 1px solid #eee;
+  background: var(--color-bg-primary, #ffffff);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
   flex-shrink: 0;
 }
 
@@ -31,8 +31,9 @@
 }
 
 .logo-text {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  color: #FF6B6B;
+  color: var(--color-text-primary, #111827);
+  letter-spacing: -0.02em;
 }
 </style>

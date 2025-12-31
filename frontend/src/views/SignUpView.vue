@@ -147,7 +147,7 @@ const handleSubmit = async () => {
 <style scoped>
 .signup-view {
   min-height: 100vh;
-  background: #f5f5f5;
+  background: var(--color-bg-grouped, #f2f2f7);
   padding: 20px;
   display: flex;
   align-items: center;
@@ -155,12 +155,12 @@ const handleSubmit = async () => {
 }
 
 .signup-container {
-  background: white;
+  background: var(--color-bg-primary, #ffffff);
   border-radius: 16px;
   padding: 32px 24px;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--ios-card-shadow);
 }
 
 /* 헤더 */
@@ -172,13 +172,14 @@ const handleSubmit = async () => {
 .signup-header h1 {
   font-size: 24px;
   font-weight: 700;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
 }
 
 .signup-header p {
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0;
 }
 
@@ -201,10 +202,12 @@ const handleSubmit = async () => {
 }
 
 .group-title {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: #666;
+  color: var(--color-text-tertiary, #8e8e93);
   margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .allergy-tags {
@@ -216,19 +219,50 @@ const handleSubmit = async () => {
 .allergy-tag {
   cursor: pointer;
   transition: all 0.2s;
+  padding: 8px 16px;
+  font-size: 13px;
+  border-radius: 20px !important;
 }
 
-.allergy-tag:hover {
-  transform: scale(1.05);
+.allergy-tag:active {
+  transform: scale(0.96);
+}
+
+/* Element Plus 태그 오버라이드 - 미선택 상태 */
+:deep(.el-tag.el-tag--info) {
+  background: var(--color-bg-primary, #ffffff) !important;
+  border-color: var(--color-separator, #e5e5ea) !important;
+  color: var(--color-text-secondary, #3c3c43) !important;
+  box-shadow: var(--ios-card-shadow) !important;
+}
+
+:deep(.el-tag.el-tag--info:hover) {
+  background: var(--color-bg-secondary, #f2f2f7) !important;
+  border-color: var(--color-primary, #007AFF) !important;
+  color: var(--color-primary, #007AFF) !important;
+}
+
+/* Element Plus 태그 오버라이드 - 선택 상태 */
+:deep(.el-tag.el-tag--primary.el-tag--dark) {
+  background: var(--color-primary, #007AFF) !important;
+  border-color: var(--color-primary, #007AFF) !important;
+  color: #ffffff !important;
 }
 
 /* 제출 버튼 */
 .submit-btn {
   width: 100%;
   height: 48px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  border-radius: 12px;
+  border-radius: 14px;
   margin-top: 16px;
+  background: var(--color-primary, #007AFF);
+  border-color: var(--color-primary, #007AFF);
+}
+
+.submit-btn:hover {
+  background: var(--color-primary-hover, #0056CC);
+  border-color: var(--color-primary-hover, #0056CC);
 }
 </style>

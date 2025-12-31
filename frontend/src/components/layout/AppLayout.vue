@@ -56,10 +56,10 @@ const hasFooter = computed(() => !!slots.footer)
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--color-bg-grouped, #f2f2f7);
   max-width: 430px;
   margin: 0 auto;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
 }
 
 /* 메인 컨텐츠 */
@@ -67,9 +67,10 @@ const hasFooter = computed(() => !!slots.footer)
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding-top: 56px; /* TopHeader 높이 */
-  padding-bottom: 64px; /* BottomNav 높이 */
+  padding-top: 56px;
+  padding-bottom: 64px;
   overflow-y: auto;
+  background-color: var(--color-bg-grouped, #f2f2f7);
 }
 
 .app-content.no-bottom-nav {
@@ -82,8 +83,8 @@ const hasFooter = computed(() => !!slots.footer)
 
 /* 커스텀 Footer */
 .app-footer {
-  background: white;
-  border-top: 1px solid #eee;
-  margin-bottom: 64px; /* BottomNav 높이 */
+  background: var(--color-bg-primary, #ffffff);
+  border-top: 0.5px solid var(--color-separator, #e5e5ea);
+  margin-bottom: 64px;
 }
 </style>

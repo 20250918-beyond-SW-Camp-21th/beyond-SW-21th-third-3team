@@ -2,7 +2,7 @@
   <div class="hashtag-selector">
     <!-- 식사 시간대 선택 -->
     <div class="meal-type-section">
-      <h4 class="section-label">🕐 식사 시간</h4>
+      <h4 class="section-label">식사 시간</h4>
       <div class="meal-types">
         <el-radio-group v-model="selectedMealType" size="large">
           <el-radio-button
@@ -24,7 +24,7 @@
         class="category-group"
       >
         <h4 class="section-label">
-          {{ categoryIcons[category] }} {{ category }}
+          {{ category }}
         </h4>
         <div class="hashtag-tags">
           <el-tag
@@ -104,15 +104,6 @@ const selectedTags = computed({
   set: (value) => emit('update:modelValue', value),
 })
 
-// 카테고리별 아이콘
-const categoryIcons = {
-  '기분': '😊',
-  '종류': '🍽️',
-  '맛': '👅',
-  '가격': '💰',
-  '상황': '👥',
-}
-
 // 필터링된 해시태그 (식사 시간대 기준)
 const filteredHashtagsByCategory = computed(() => {
   const filtered = getHashtagsByMealType(selectedMealType.value)
@@ -172,7 +163,7 @@ watch(selectedMealType, (newValue) => {
 .hashtag-selector {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 /* 섹션 스타일 */
@@ -185,10 +176,12 @@ watch(selectedMealType, (newValue) => {
 }
 
 .section-label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-tertiary, #8e8e93);
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 /* 식사 시간대 */
@@ -199,6 +192,20 @@ watch(selectedMealType, (newValue) => {
 
 .meal-types :deep(.el-radio-button__inner) {
   padding: 12px 24px;
+  border-color: var(--color-separator, #e5e5ea);
+  background: var(--color-bg-primary, #ffffff);
+  border-radius: 10px;
+}
+
+.meal-types :deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+  background-color: var(--color-primary, #007AFF);
+  border-color: var(--color-primary, #007AFF);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.meal-types :deep(.el-radio-button__inner:hover) {
+  color: var(--color-primary, #007AFF);
 }
 
 /* 해시태그 카테고리 */
@@ -218,17 +225,40 @@ watch(selectedMealType, (newValue) => {
   transition: all 0.2s;
   padding: 8px 16px;
   font-size: 13px;
+  border-radius: 20px !important;
 }
 
-.hashtag-tag:hover {
-  transform: scale(1.05);
+.hashtag-tag:active {
+  transform: scale(0.96);
+}
+
+/* Element Plus 태그 오버라이드 - 미선택 상태 */
+:deep(.el-tag.el-tag--info.el-tag--plain) {
+  background: var(--color-bg-primary, #ffffff) !important;
+  border-color: var(--color-separator, #e5e5ea) !important;
+  color: var(--color-text-secondary, #3c3c43) !important;
+  box-shadow: var(--ios-card-shadow) !important;
+}
+
+:deep(.el-tag.el-tag--info.el-tag--plain:hover) {
+  background: var(--color-bg-secondary, #f2f2f7) !important;
+  border-color: var(--color-primary, #007AFF) !important;
+  color: var(--color-primary, #007AFF) !important;
+}
+
+/* Element Plus 태그 오버라이드 - 선택 상태 */
+:deep(.el-tag.el-tag--primary.el-tag--dark) {
+  background: var(--color-primary, #007AFF) !important;
+  border-color: var(--color-primary, #007AFF) !important;
+  color: #ffffff !important;
 }
 
 /* 선택된 태그 */
 .selected-section {
-  background: #f8f9fa;
+  background: var(--color-bg-primary, #ffffff);
   padding: 16px;
-  border-radius: 12px;
+  border-radius: 14px;
+  box-shadow: var(--ios-card-shadow);
 }
 
 .selected-header {
@@ -240,7 +270,7 @@ watch(selectedMealType, (newValue) => {
 .selected-label {
   font-size: 13px;
   font-weight: 500;
-  color: #666;
+  color: var(--color-text-secondary, #3c3c43);
 }
 
 .selected-tags {

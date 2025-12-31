@@ -3,7 +3,9 @@
     <div class="login-container">
       <!-- 로고 영역 -->
       <div class="logo-section">
-        <div class="logo-icon">🍽️</div>
+        <div class="logo-icon">
+          <el-icon :size="48"><Dish /></el-icon>
+        </div>
         <h1 class="app-title">Food Finder</h1>
         <p class="app-subtitle">AI가 추천하는 맛집을 찾아보세요</p>
       </div>
@@ -29,15 +31,21 @@
       <!-- 기능 소개 -->
       <div class="features-section">
         <div class="feature-item">
-          <span class="feature-icon">🤖</span>
+          <div class="feature-icon-box">
+            <el-icon :size="18"><Promotion /></el-icon>
+          </div>
           <span class="feature-text">AI 맞춤 추천</span>
         </div>
         <div class="feature-item">
-          <span class="feature-icon">📍</span>
+          <div class="feature-icon-box">
+            <el-icon :size="18"><Location /></el-icon>
+          </div>
           <span class="feature-text">내 주변 맛집</span>
         </div>
         <div class="feature-item">
-          <span class="feature-icon">⭐</span>
+          <div class="feature-icon-box">
+            <el-icon :size="18"><Star /></el-icon>
+          </div>
           <span class="feature-text">리뷰 & 평점</span>
         </div>
       </div>
@@ -48,12 +56,12 @@
 <script setup>
 import { ref } from 'vue'
 import { authApi } from '@/api/auth'
+import { Dish, Promotion, Location, Star } from '@element-plus/icons-vue'
 
 const isLoading = ref(false)
 
 const handleGithubLogin = () => {
   isLoading.value = true
-  // GitHub OAuth 로그인 페이지로 리다이렉트
   window.location.href = authApi.getGithubLoginUrl()
 }
 </script>
@@ -64,17 +72,17 @@ const handleGithubLogin = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-bg-grouped, #f2f2f7);
   padding: 20px;
 }
 
 .login-container {
-  background: white;
-  border-radius: 24px;
+  background: var(--color-bg-primary, #ffffff);
+  border-radius: 20px;
   padding: 48px 32px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--ios-card-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
   text-align: center;
 }
 
@@ -84,20 +92,28 @@ const handleGithubLogin = () => {
 }
 
 .logo-icon {
-  font-size: 64px;
-  margin-bottom: 16px;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-secondary, #f2f2f7);
+  border-radius: 20px;
+  color: var(--color-primary, #007AFF);
 }
 
 .app-title {
   font-size: 28px;
   font-weight: 700;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
 }
 
 .app-subtitle {
-  font-size: 14px;
-  color: #666;
+  font-size: 15px;
+  color: var(--color-text-tertiary, #8e8e93);
   margin: 0;
 }
 
@@ -111,9 +127,9 @@ const handleGithubLogin = () => {
   height: 52px;
   font-size: 16px;
   font-weight: 600;
-  border-radius: 12px;
-  background: #24292e;
-  border-color: #24292e;
+  border-radius: 14px;
+  background: var(--color-text-primary, #1c1c1e);
+  border-color: var(--color-text-primary, #1c1c1e);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,8 +137,8 @@ const handleGithubLogin = () => {
 }
 
 .github-login-btn:hover {
-  background: #1b1f23;
-  border-color: #1b1f23;
+  background: #3c3c43;
+  border-color: #3c3c43;
 }
 
 .github-icon {
@@ -131,8 +147,8 @@ const handleGithubLogin = () => {
 }
 
 .login-description {
-  font-size: 12px;
-  color: #999;
+  font-size: 13px;
+  color: var(--color-text-tertiary, #8e8e93);
   margin-top: 16px;
 }
 
@@ -141,22 +157,30 @@ const handleGithubLogin = () => {
   display: flex;
   justify-content: space-around;
   padding-top: 24px;
-  border-top: 1px solid #eee;
+  border-top: 0.5px solid var(--color-separator, #e5e5ea);
 }
 
 .feature-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
-.feature-icon {
-  font-size: 24px;
+.feature-icon-box {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-secondary, #f2f2f7);
+  border-radius: 12px;
+  color: var(--color-primary, #007AFF);
 }
 
 .feature-text {
   font-size: 12px;
-  color: #666;
+  color: var(--color-text-tertiary, #8e8e93);
+  font-weight: 500;
 }
 </style>

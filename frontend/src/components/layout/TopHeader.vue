@@ -57,8 +57,10 @@ const handleBack = () => {
   left: 0;
   right: 0;
   height: 56px;
-  background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 0.5px solid var(--color-separator, #e5e5ea);
   z-index: 1000;
   padding-top: env(safe-area-inset-top, 0);
 }
@@ -69,6 +71,8 @@ const handleBack = () => {
   justify-content: space-between;
   height: 56px;
   padding: 0 16px;
+  max-width: 430px;
+  margin: 0 auto;
 }
 
 .header-left,
@@ -92,13 +96,15 @@ const handleBack = () => {
 }
 
 .header-title {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
 .back-btn {
   font-size: 20px;
+  color: var(--color-primary, #007AFF);
 }
 </style>

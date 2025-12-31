@@ -3,7 +3,9 @@
     <!-- 로딩 상태 -->
     <div v-if="isLoading" class="loading-section">
       <div class="loading-content">
-        <div class="loading-emoji">🍽️</div>
+        <div class="loading-emoji">
+          <el-icon :size="32" color="white"><Dish /></el-icon>
+        </div>
         <el-icon class="loading-icon" :size="32">
           <Loading />
         </el-icon>
@@ -16,7 +18,7 @@
     <div v-else class="result-container">
       <!-- AI 추천 배지 -->
       <div class="ai-badge">
-        <span class="badge-icon">🤖</span>
+        <span class="badge-icon"><el-icon :size="14"><Promotion /></el-icon></span>
         <span class="badge-text">AI 추천</span>
       </div>
 
@@ -29,15 +31,15 @@
       <!-- 평점 & 거리 -->
       <div class="quick-info">
         <div class="info-chip rating">
-          <span class="chip-icon">⭐</span>
+          <span class="chip-icon"><el-icon><Star /></el-icon></span>
           <span class="chip-value">{{ formattedRating }}</span>
         </div>
         <div class="info-chip distance">
-          <span class="chip-icon">📍</span>
+          <span class="chip-icon"><el-icon><Location /></el-icon></span>
           <span class="chip-value">{{ formattedDistance }}</span>
         </div>
         <div v-if="restaurant.reviewCount" class="info-chip reviews" @click="goToRestaurantReviews">
-          <span class="chip-icon">💬</span>
+          <span class="chip-icon"><el-icon><ChatDotRound /></el-icon></span>
           <span class="chip-value">리뷰 {{ restaurant.reviewCount }}개</span>
         </div>
       </div>
@@ -51,7 +53,7 @@
           <div ref="mapContainer" class="map-container"></div>
         </div>
         <div class="address-bar">
-          <span class="address-icon">🏠</span>
+          <span class="address-icon"><el-icon><OfficeBuilding /></el-icon></span>
           <span class="address-text">{{ restaurant.roadAddress || restaurant.address || '주소 정보 없음' }}</span>
         </div>
       </div>
@@ -59,7 +61,7 @@
       <!-- AI 추천 이유 -->
       <div class="recommend-section">
         <div class="section-header">
-          <span class="section-icon">💡</span>
+          <span class="section-icon"><el-icon><InfoFilled /></el-icon></span>
           <span class="section-title">AI 추천 이유</span>
         </div>
         <p class="recommend-text">{{ restaurant.recommend || '선택하신 조건에 맞는 맛집이에요!' }}</p>
@@ -68,7 +70,7 @@
       <!-- 연락처 -->
       <div v-if="restaurant.phone" class="contact-section">
         <a :href="'tel:' + restaurant.phone" class="contact-link">
-          <span class="contact-icon">📞</span>
+          <span class="contact-icon"><el-icon><Phone /></el-icon></span>
           <span class="contact-text">{{ restaurant.phone }}</span>
         </a>
       </div>
@@ -89,12 +91,12 @@
           :disabled="isReLoading"
           @click="requestReRecommendation"
         >
-          <span v-if="isReLoading" class="btn-loading">⏳</span>
-          <span v-else class="btn-icon">🔄</span>
+          <span v-if="isReLoading" class="btn-loading"><el-icon><Loading /></el-icon></span>
+          <span v-else class="btn-icon"><el-icon><Refresh /></el-icon></span>
           <span class="btn-text">다른 추천</span>
         </button>
         <button class="btn-review" @click="goToWriteReview">
-          <span class="btn-icon">✍️</span>
+          <span class="btn-icon"><el-icon><Edit /></el-icon></span>
           <span class="btn-text">리뷰 작성</span>
         </button>
       </div>
@@ -123,7 +125,9 @@
         
         <!-- 리뷰 없음 -->
         <div v-else-if="reviews.length === 0" class="no-reviews">
-          <span class="empty-icon">📝</span>
+          <div class="empty-icon">
+            <el-icon :size="24"><Document /></el-icon>
+          </div>
           <p>아직 리뷰가 없습니다</p>
         </div>
         
@@ -155,7 +159,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Loading } from '@element-plus/icons-vue'
+import { Loading, Dish, Promotion, Star, Location, ChatDotRound, OfficeBuilding, InfoFilled, Phone, Refresh, Edit, Document } from '@element-plus/icons-vue'
 import { loadKakaoMap } from '@/utils/kakaoMapLoader'
 import { useRecommendStore } from '@/stores/recommend'
 import { recommendApi } from '@/api/recommend'
@@ -502,7 +506,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-primary, #007AFF);
   min-height: 100%;
 }
 
@@ -512,14 +516,14 @@ onUnmounted(() => {
 }
 
 .loading-emoji {
-  font-size: 48px;
-  margin-bottom: 16px;
-  animation: bounce 1s ease infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
 }
 
 .loading-icon {
@@ -534,7 +538,7 @@ onUnmounted(() => {
 }
 
 .loading-content h3 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0 0 8px 0;
 }
@@ -548,7 +552,7 @@ onUnmounted(() => {
 /* 결과 컨테이너 */
 .result-container {
   padding: 20px;
-  background: #f8f9fa;
+  background: var(--color-bg-grouped, #f2f2f7);
   min-height: 100%;
 }
 
@@ -557,7 +561,7 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-primary, #007AFF);
   color: white;
   padding: 6px 14px;
   border-radius: 20px;
@@ -567,7 +571,8 @@ onUnmounted(() => {
 }
 
 .badge-icon {
-  font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 /* 식당 헤더 */
@@ -578,14 +583,15 @@ onUnmounted(() => {
 .restaurant-name {
   font-size: 24px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 4px 0;
   line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
 .restaurant-category {
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0;
 }
 
@@ -601,11 +607,11 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: white;
+  background: var(--color-bg-primary, #ffffff);
   padding: 8px 12px;
   border-radius: 20px;
   font-size: 13px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: var(--ios-card-shadow);
 }
 
 .info-chip.reviews {
@@ -613,25 +619,25 @@ onUnmounted(() => {
   transition: all 0.2s;
 }
 
-.info-chip.reviews:hover {
-  background: #f0f0f0;
+.info-chip.reviews:active {
+  transform: scale(0.98);
 }
 
 .chip-icon {
-  font-size: 14px;
+  color: var(--color-text-secondary, #3c3c43);
 }
 
 .chip-value {
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
 }
 
 /* 지도 래퍼 */
 .map-wrapper {
-  background: white;
-  border-radius: 16px;
+  background: var(--color-bg-primary, #ffffff);
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: var(--ios-card-shadow);
   margin-bottom: 16px;
 }
 
@@ -639,7 +645,7 @@ onUnmounted(() => {
   width: 100%;
   height: 180px;
   position: relative;
-  background: #e9ecef;
+  background: var(--color-bg-secondary, #f2f2f7);
 }
 
 .map-container {
@@ -660,27 +666,27 @@ onUnmounted(() => {
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background: #fafafa;
-  border-top: 1px solid #eee;
+  background: var(--color-bg-secondary, #f2f2f7);
+  border-top: 0.5px solid var(--color-separator, #e5e5ea);
 }
 
 .address-icon {
-  font-size: 16px;
+  color: var(--color-text-secondary, #3c3c43);
 }
 
 .address-text {
   font-size: 13px;
-  color: #555;
+  color: var(--color-text-secondary, #3c3c43);
   flex: 1;
 }
 
 /* 추천 이유 섹션 */
 .recommend-section {
-  background: white;
-  border-radius: 16px;
+  background: var(--color-bg-primary, #ffffff);
+  border-radius: 14px;
   padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: var(--ios-card-shadow);
 }
 
 .section-header {
@@ -691,19 +697,19 @@ onUnmounted(() => {
 }
 
 .section-icon {
-  font-size: 18px;
+  color: var(--color-primary, #007AFF);
 }
 
 .section-title {
   font-size: 15px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
 }
 
 .recommend-text {
   font-size: 14px;
   line-height: 1.6;
-  color: #555;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0;
 }
 
@@ -716,25 +722,25 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: white;
+  background: var(--color-bg-primary, #ffffff);
   padding: 14px 16px;
-  border-radius: 12px;
+  border-radius: 14px;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: var(--ios-card-shadow);
   transition: all 0.2s;
 }
 
-.contact-link:hover {
-  background: #f8f9fa;
+.contact-link:active {
+  transform: scale(0.98);
 }
 
 .contact-icon {
-  font-size: 18px;
+  color: var(--color-text-secondary, #3c3c43);
 }
 
 .contact-text {
   font-size: 15px;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   font-weight: 500;
 }
 
@@ -743,23 +749,23 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  background: var(--color-bg-primary, #ffffff);
   padding: 16px;
-  border-radius: 12px;
+  border-radius: 14px;
   margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: var(--ios-card-shadow);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
-.review-row:hover {
-  background-color: #f9f9f9;
+.review-row:active {
+  transform: scale(0.98);
 }
 
 .review-label {
   font-size: 15px;
   font-weight: 500;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
 }
 
 .review-row-right {
@@ -770,15 +776,15 @@ onUnmounted(() => {
 
 .review-count-badge {
   font-size: 13px;
-  color: #666;
-  background: rgba(0, 0, 0, 0.06);
+  color: var(--color-text-secondary, #3c3c43);
+  background: var(--color-bg-secondary, #f2f2f7);
   padding: 4px 10px;
   border-radius: 12px;
 }
 
 .review-arrow {
   font-size: 20px;
-  color: #999;
+  color: var(--color-text-tertiary, #8e8e93);
   font-weight: 300;
 }
 
@@ -806,14 +812,13 @@ onUnmounted(() => {
 }
 
 .btn-retry {
-  background: white;
-  color: #333;
-  border: 2px solid #e0e0e0;
+  background: var(--color-bg-primary, #ffffff);
+  color: var(--color-text-primary, #1c1c1e);
+  box-shadow: var(--ios-card-shadow);
 }
 
-.btn-retry:hover:not(:disabled) {
-  background: #f5f5f5;
-  border-color: #ccc;
+.btn-retry:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .btn-retry:disabled {
@@ -822,21 +827,24 @@ onUnmounted(() => {
 }
 
 .btn-review {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-primary, #007AFF);
   color: white;
 }
 
+.btn-review:active {
+  transform: scale(0.98);
+}
+
 .btn-review:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  background: var(--color-primary-hover, #0056CC);
 }
 
 .btn-icon {
-  font-size: 18px;
+  display: flex;
+  align-items: center;
 }
 
 .btn-loading {
-  font-size: 18px;
   animation: spin 1s linear infinite;
 }
 
@@ -875,13 +883,13 @@ onUnmounted(() => {
 .modal-title {
   font-size: 18px;
   font-weight: 700;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
   margin: 0 0 4px 0;
 }
 
 .modal-subtitle {
   font-size: 13px;
-  color: #999;
+  color: var(--color-text-tertiary, #8e8e93);
   margin: 0;
 }
 
@@ -900,13 +908,19 @@ onUnmounted(() => {
 }
 
 .no-reviews .empty-icon {
-  font-size: 48px;
-  display: block;
-  margin-bottom: 12px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-secondary, #f2f2f7);
+  border-radius: 12px;
+  margin: 0 auto 12px;
+  color: var(--color-text-tertiary, #8e8e93);
 }
 
 .no-reviews p {
-  color: #666;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0;
   font-size: 14px;
 }
@@ -919,7 +933,7 @@ onUnmounted(() => {
 
 .review-item {
   padding: 14px;
-  background: #f8f9fa;
+  background: var(--color-bg-secondary, #f2f2f7);
   border-radius: 12px;
 }
 
@@ -934,31 +948,31 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 4px;
-  background: #FFF9E6;
+  background: var(--color-bg-primary, #ffffff);
   padding: 4px 10px;
   border-radius: 12px;
 }
 
 .review-rating-badge .star {
-  color: #FFB800;
+  color: var(--color-warning, #ff9500);
   font-size: 12px;
 }
 
 .review-rating-badge .rating-num {
   font-size: 13px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary, #1c1c1e);
 }
 
 .review-date {
   font-size: 12px;
-  color: #999;
+  color: var(--color-text-tertiary, #8e8e93);
 }
 
 .review-text {
   font-size: 14px;
   line-height: 1.6;
-  color: #555;
+  color: var(--color-text-secondary, #3c3c43);
   margin: 0;
 }
 
@@ -972,7 +986,7 @@ onUnmounted(() => {
   flex: 1;
   height: 46px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -980,20 +994,20 @@ onUnmounted(() => {
 }
 
 .modal-btn-secondary {
-  background: #f5f5f5;
-  color: #333;
+  background: var(--color-bg-secondary, #f2f2f7);
+  color: var(--color-text-primary, #1c1c1e);
 }
 
 .modal-btn-secondary:hover {
-  background: #eee;
+  background: var(--color-bg-tertiary, #e5e5ea);
 }
 
 .modal-btn-primary {
-  background: #333;
+  background: var(--color-primary, #007AFF);
   color: white;
 }
 
 .modal-btn-primary:hover {
-  background: #555;
+  background: var(--color-primary-hover, #0056CC);
 }
 </style>

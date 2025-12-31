@@ -13,8 +13,8 @@
         <div class="rating-wrapper">
           <el-rate
               v-model="form.rating"
-              :colors="['#FF6B6B', '#FF6B6B', '#FF6B6B']"
-              :void-color="'#ddd'"
+              :colors="['#ff9500', '#ff9500', '#ff9500']"
+              :void-color="'#e5e5ea'"
               size="large"
               show-score
               score-template="{value}점"
@@ -183,31 +183,66 @@ onMounted(() => {
 
 <style scoped>
 .post-review-view {
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+  background: var(--color-bg-grouped, #f2f2f7);
+  min-height: 100%;
 }
 
 .restaurant-info,
 .rating-section,
 .content-section,
 .hashtag-section {
-  background: white;
+  background: var(--color-bg-primary, #ffffff);
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-radius: 14px;
+  box-shadow: var(--ios-card-shadow);
 }
 
 .restaurant-name {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
+  color: var(--color-text-primary, #1c1c1e);
+  margin: 0 0 4px 0;
+}
+
+.restaurant-category {
+  font-size: 14px;
+  color: var(--color-text-secondary, #3c3c43);
+  margin: 0;
+}
+
+.rating-wrapper {
+  padding: 12px 16px;
+  background: var(--color-bg-secondary, #f2f2f7);
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.rating-wrapper :deep(.el-rate) {
+  height: auto;
+}
+
+.rating-wrapper :deep(.el-rate__icon) {
+  font-size: 28px;
+}
+
+.rating-wrapper :deep(.el-rate__text) {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary, #1c1c1e);
 }
 
 .section-label {
-  font-size: 14px;
+  display: block;
+  font-size: 13px;
   font-weight: 600;
+  color: var(--color-text-tertiary, #8e8e93);
   margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .hashtag-list {
@@ -218,13 +253,55 @@ onMounted(() => {
 
 .hashtag-tag {
   cursor: pointer;
+  transition: all 0.2s;
+  padding: 8px 16px;
+  font-size: 13px;
+  border-radius: 20px !important;
+}
+
+.hashtag-tag:active {
+  transform: scale(0.96);
+}
+
+/* Element Plus 태그 오버라이드 - 미선택 상태 */
+:deep(.el-tag.el-tag--info) {
+  background: var(--color-bg-primary, #ffffff) !important;
+  border-color: var(--color-separator, #e5e5ea) !important;
+  color: var(--color-text-secondary, #3c3c43) !important;
+  box-shadow: var(--ios-card-shadow) !important;
+}
+
+:deep(.el-tag.el-tag--info:hover) {
+  background: var(--color-bg-secondary, #f2f2f7) !important;
+  border-color: var(--color-primary, #007AFF) !important;
+  color: var(--color-primary, #007AFF) !important;
+}
+
+/* Element Plus 태그 오버라이드 - 선택 상태 */
+:deep(.el-tag.el-tag--primary.el-tag--dark) {
+  background: var(--color-primary, #007AFF) !important;
+  border-color: var(--color-primary, #007AFF) !important;
+  color: #ffffff !important;
 }
 
 .submit-btn {
   width: 100%;
   height: 52px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  border-radius: 12px;
+  border-radius: 14px;
+  background: var(--color-primary, #007AFF);
+  border-color: var(--color-primary, #007AFF);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: var(--color-primary-hover, #0056CC);
+  border-color: var(--color-primary-hover, #0056CC);
+}
+
+.submit-btn:disabled {
+  background: var(--color-bg-tertiary, #e5e5ea);
+  border-color: var(--color-bg-tertiary, #e5e5ea);
+  color: var(--color-text-tertiary, #8e8e93);
 }
 </style>
