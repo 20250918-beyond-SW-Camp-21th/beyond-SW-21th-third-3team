@@ -47,7 +47,7 @@
             <div class="menu-icon">👤</div>
             <div class="menu-content">
               <span class="menu-label">프로필 수정</span>
-              <span class="menu-desc">닉네임, 프로필 이미지 변경</span>
+              <span class="menu-desc">닉네임 변경</span>
             </div>
             <el-icon class="menu-arrow"><ArrowRight /></el-icon>
           </div>
@@ -205,8 +205,10 @@ const avatarInitial = computed(() => {
 const allergyText = computed(() => {
   const allergies = userStore.profile?.allergies || []
   if (allergies.length === 0) return '설정 안함'
-  
-  const labels = allergies.map(code => {
+
+  const labels = allergies.map(item => {
+    const code = typeof item === 'object' ? item.allergyType : item
+
     const allergy = ALLERGIES.find(a => a.code === code)
     return allergy ? allergy.label : code
   })
@@ -257,8 +259,15 @@ const saveProfile = async () => {
 
 // 알레르기 설정 모달 열기
 const openAllergySettings = () => {
-  allergyForm.value = [...(userStore.profile?.allergies || [])]
-  showAllergyModal.value = true
+  const currentAllergies = userStore.profile?.allergies || [];
+
+  if (currentAllergies.length > 0 && typeof currentAllergies[0] === 'object') {
+    allergyForm.value = currentAllergies.map(item => item.allergyType);
+  } else {
+    allergyForm.value = [...currentAllergies];
+  }
+
+  showAllergyModal.value = true;
 }
 
 // 알레르기 토글
@@ -276,8 +285,13 @@ const saveAllergy = async () => {
   isSavingAllergy.value = true
   
   try {
+    const allergyPayload = allergyForm.value.map(type => ({
+      allergyType: type
+    }));
+
     await userApi.updateProfile({
-      allergies: allergyForm.value
+      nickname: userStore.nickname,
+      allergies: allergyPayload
     })
     
     // 스토어 업데이트
