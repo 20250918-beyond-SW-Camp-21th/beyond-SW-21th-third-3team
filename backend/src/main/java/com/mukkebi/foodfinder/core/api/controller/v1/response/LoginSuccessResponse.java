@@ -4,5 +4,5 @@ import com.mukkebi.foodfinder.core.enums.UserStatus;
 
 public record LoginSuccessResponse(
         Long userId,
-        UserStatus status
+        UserStatus userStatus
 ) {}

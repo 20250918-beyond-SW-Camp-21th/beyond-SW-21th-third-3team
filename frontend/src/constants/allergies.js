@@ -18,11 +18,6 @@ export const ALLERGY_TYPES = [
   { code: 'PORK', group: '알레르기', label: '돼지고기', icon: '🐷' },
   { code: 'CHICKEN', group: '알레르기', label: '닭고기', icon: '🐔' },
   { code: 'BEEF', group: '알레르기', label: '소고기', icon: '🐄' },
-
-  // 식이 제한
-  { code: 'VEGAN', group: '식이제한', label: '비건', icon: '🥬' },
-  { code: 'LACTOSE_FREE', group: '식이제한', label: '락토-프리', icon: '🚫' },
-  { code: 'GLUTEN_FREE', group: '식이제한', label: '글루텐-프리', icon: '🌿' },
 ]
 
 // ALLERGIES alias for easier import
