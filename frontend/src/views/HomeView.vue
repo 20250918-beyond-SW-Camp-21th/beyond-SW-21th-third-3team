@@ -74,6 +74,7 @@ import { useRouter } from 'vue-router'
 import { ArrowRight } from '@element-plus/icons-vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { useUserStore } from '@/stores/user'
+import { statisticsApi } from '@/api/statistics'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -96,11 +97,9 @@ const goTo = (path) => {
 // 통계 로드
 const loadStats = async () => {
   try {
-    // TODO: 실제 API 연결
-    stats.value = {
-      reviewCount: 12,
-      visitCount: 28,
-      recommendCount: 45
+    const response = await statisticsApi.getHomeStats()
+    if (response) {
+      stats.value = response.data
     }
   } catch (error) {
     console.error('통계 로드 실패:', error)
