@@ -98,11 +98,11 @@ public class RecommendService {
                 aiResult.reason(),
                 aiResult.menu()
         );
-        recommendRepository.save(recommend);
+        Recommend savedRecommend = recommendRepository.save(recommend);
 
         // 8. RestaurantDetailResponse 반환 (rating은 미구현 상태로 null)
         String recommendText = String.format("추천 메뉴: %s | %s", aiResult.menu(), aiResult.reason());
-        return RestaurantDetailResponse.of(recommendedRestaurant, recommendText, null);
+        return RestaurantDetailResponse.of(savedRecommend.getId(), recommendedRestaurant, recommendText, null);
     }
 
     private String buildPrompt(List<String> hashTagDescriptions, List<Restaurant> restaurants, Set<String> excludeIds) {
