@@ -6,18 +6,24 @@ import com.mukkebi.foodfinder.core.support.error.CoreException;
 import com.mukkebi.foodfinder.core.support.error.ErrorType;
 import com.mukkebi.foodfinder.storage.UserRepository;
 
+import java.time.LocalDateTime;
+
 public record ReviewResponse(
+        Long id,
         String content,
         Double rating,
         String userNickname,
-        String restaurantName
+        String restaurantName,
+        LocalDateTime createdAt
 ) {
     public static ReviewResponse of(Review review, User user) {
         return new ReviewResponse(
+                review.getId(),
                 review.getContent(),
                 review.getRating(),
                 user.getNickname(),
-                review.getRestaurantName()
+                review.getRestaurantName(),
+                review.getCreatedAt()
         );
     }
 }

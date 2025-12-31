@@ -56,14 +56,14 @@
             <!-- 액션 버튼 -->
             <div class="review-actions">
               <el-button 
-                type="text" 
+                link 
                 size="small"
                 @click.stop="openEditModal(review)"
               >
                 수정
               </el-button>
               <el-button 
-                type="text" 
+                link 
                 size="small"
                 class="delete-btn"
                 @click.stop="confirmDelete(review)"
@@ -89,14 +89,22 @@
     <!-- 리뷰 상세/수정 모달 -->
     <el-dialog
       v-model="showDetailModal"
-      :title="isEditMode ? '리뷰 수정' : '리뷰 상세'"
-      width="90%"
+      :title="''"
+      width="320px"
+      :show-close="false"
       :close-on-click-modal="!isEditMode"
+      class="review-dialog"
     >
+      <template #header>
+        <div class="modal-header">
+          <h3 class="modal-title">{{ isEditMode ? '리뷰 수정' : '리뷰 상세' }}</h3>
+        </div>
+      </template>
+
       <template v-if="selectedReview">
         <!-- 음식점 정보 -->
         <div class="modal-restaurant">
-          <h3>{{ selectedReview.restaurantName }}</h3>
+          <h4 class="modal-restaurant-name">{{ selectedReview.restaurantName }}</h4>
           <span class="modal-date">{{ formatDate(selectedReview.createdAt) }}</span>
         </div>
 
@@ -107,7 +115,7 @@
             v-model="editForm.rating"
             :disabled="!isEditMode"
             show-score
-            :colors="['#FF6B6B', '#FF6B6B', '#FF6B6B']"
+            :colors="['#FFB800', '#FFB800', '#FFB800']"
           />
         </div>
 
@@ -118,7 +126,7 @@
             v-if="isEditMode"
             v-model="editForm.content"
             type="textarea"
-            :rows="5"
+            :rows="4"
             placeholder="리뷰 내용을 입력하세요"
             maxlength="500"
             show-word-limit
@@ -129,18 +137,18 @@
 
       <template #footer>
         <div class="modal-footer">
-          <el-button @click="closeDetailModal">닫기</el-button>
+          <button class="modal-btn-secondary" @click="closeDetailModal">닫기</button>
           <template v-if="isEditMode">
-            <el-button 
-              type="primary" 
-              :loading="isSaving"
+            <button 
+              class="modal-btn-primary" 
+              :disabled="isSaving"
               @click="saveReview"
             >
-              저장
-            </el-button>
+              {{ isSaving ? '저장 중...' : '저장' }}
+            </button>
           </template>
           <template v-else>
-            <el-button type="primary" @click="startEdit">수정하기</el-button>
+            <button class="modal-btn-primary" @click="startEdit">수정하기</button>
           </template>
         </div>
       </template>
@@ -529,12 +537,44 @@ onMounted(async () => {
 }
 
 /* 모달 스타일 */
-.modal-restaurant {
-  margin-bottom: 20px;
+:deep(.review-dialog) {
+  border-radius: 16px;
+  overflow: hidden;
 }
 
-.modal-restaurant h3 {
+:deep(.review-dialog .el-dialog__header) {
+  padding: 20px 16px 0;
+  margin: 0;
+}
+
+:deep(.review-dialog .el-dialog__body) {
+  padding: 16px;
+}
+
+:deep(.review-dialog .el-dialog__footer) {
+  padding: 0 16px 20px;
+}
+
+.modal-header {
+  text-align: center;
+}
+
+.modal-title {
   font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.modal-restaurant {
+  text-align: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modal-restaurant-name {
+  font-size: 16px;
   font-weight: 600;
   color: #333;
   margin: 0 0 4px 0;
@@ -546,35 +586,69 @@ onMounted(async () => {
 }
 
 .modal-rating {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .modal-rating label,
 .modal-content label {
   display: block;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #666;
   margin-bottom: 8px;
 }
 
 .modal-content {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .content-text {
   font-size: 14px;
-  color: #333;
-  line-height: 1.8;
+  color: #555;
+  line-height: 1.6;
   margin: 0;
   padding: 12px;
-  background: #f9f9f9;
-  border-radius: 8px;
+  background: #f8f9fa;
+  border-radius: 12px;
 }
 
 .modal-footer {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
+  gap: 10px;
+}
+
+.modal-btn-secondary,
+.modal-btn-primary {
+  flex: 1;
+  height: 46px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-btn-secondary {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.modal-btn-secondary:hover {
+  background: #eee;
+}
+
+.modal-btn-primary {
+  background: #333;
+  color: white;
+}
+
+.modal-btn-primary:hover {
+  background: #555;
+}
+
+.modal-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>
