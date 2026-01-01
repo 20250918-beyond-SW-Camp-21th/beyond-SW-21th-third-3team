@@ -70,6 +70,18 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/statistics/categories',
+    name: 'CategoryStatistics',
+    component: () => import('@/views/CategoryStatisticsView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/statistics/time',
+    name: 'TimeStatistics',
+    component: () => import('@/views/TimeStatisticsView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/oauth/callback',
     name: 'OAuthCallback',
     component: () => import('@/views/OAuthCallbackView.vue'),

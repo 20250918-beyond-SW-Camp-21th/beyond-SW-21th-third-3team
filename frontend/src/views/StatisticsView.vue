@@ -5,8 +5,12 @@
       <div class="summary-section">
         <div class="summary-card">
           <div class="summary-header">
-            <h3>이번 달 활동</h3>
-            <span class="period">{{ currentMonth }}</span>
+            <h3>
+              <span class="nav-btn" @click="prevMonth">&lt;</span>
+              {{ currentMonth }}
+              <span class="nav-btn" @click="nextMonth" :class="{ disabled: isCurrentMonth }">&gt;</span>
+            </h3>
+            <span class="period" style="visibility: hidden;">기간</span>
           </div>
           <div class="summary-stats">
             <div class="summary-item">
@@ -27,7 +31,7 @@
         <div class="chart-card">
           <div v-if="categoryStats.length > 0" class="bar-chart">
             <div 
-              v-for="(item, index) in categoryStats" 
+              v-for="(item, index) in visibleCategoryStats" 
               :key="index"
               class="bar-item"
             >
@@ -40,8 +44,46 @@
               </div>
               <span class="bar-value">{{ item.count }}회</span>
             </div>
+            
+            <!-- 더보기 버튼 -->
+            <div v-if="categoryStats.length > 5" class="more-btn-wrapper" @click="goToCategoryStats">
+              <span class="more-text">더보기 ></span>
+            </div>
           </div>
           <div v-else class="empty-state">
+            데이터가 없습니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 차트 섹션: 요일별 활동 (주간) -->
+      <div class="chart-section">
+        <h3 class="section-title">요일별 활동</h3>
+        <div class="chart-card">
+          <div v-if="weeklyStats.length > 0" class="col-chart">
+            <div 
+              v-for="item in weeklyStats" 
+              :key="item.label"
+              class="col-item"
+            >
+              <span class="col-value" v-if="item.count > 0">{{ item.count }}</span>
+              <div class="col-track">
+                <div 
+                  class="col-fill" 
+                  :style="{ height: item.percentage + '%' }"
+                ></div>
+              </div>
+              <span class="col-label">{{ item.label }}</span>
+            </div>
+            </div>
+          </div>
+          
+          <!-- 자세히 보기 버튼 -->
+          <div v-if="weeklyStats.length > 0" class="more-btn-wrapper" @click="goToTimeStats">
+            <span class="more-text">자세히 보기 ></span>
+          </div>
+
+           <div v-else class="empty-state">
             데이터가 없습니다.
           </div>
         </div>
@@ -98,7 +140,6 @@
           </div>
         </div>
       </div>
-    </div>
   </AppLayout>
 </template>
 
@@ -107,11 +148,36 @@ import { ref, computed, onMounted } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import { statisticsApi } from '@/api/statistics'
 
-// 현재 월
+// 날짜 상태
+const selectedDate = ref(new Date())
+
+// 현재 월 표시
 const currentMonth = computed(() => {
-  const now = new Date()
-  return `${now.getFullYear()}년 ${now.getMonth() + 1}월`
+  const d = selectedDate.value
+  return `${d.getFullYear()}년 ${d.getMonth() + 1}월`
 })
+
+// 다음 달이 현재(미래)인지 확인
+const isCurrentMonth = computed(() => {
+  const now = new Date()
+  const d = selectedDate.value
+  return now.getFullYear() === d.getFullYear() && now.getMonth() === d.getMonth()
+})
+
+const prevMonth = () => {
+  const d = new Date(selectedDate.value)
+  d.setMonth(d.getMonth() - 1)
+  selectedDate.value = d
+  loadStatistics()
+}
+
+const nextMonth = () => {
+  if (isCurrentMonth.value) return
+  const d = new Date(selectedDate.value)
+  d.setMonth(d.getMonth() + 1)
+  selectedDate.value = d
+  loadStatistics()
+}
 
 // 통계 데이터
 const stats = ref({
@@ -120,32 +186,82 @@ const stats = ref({
 })
 
 const categoryStats = ref([])
+const visibleCategoryStats = computed(() => {
+  return categoryStats.value.slice(0, 5)
+})
+
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const goToCategoryStats = () => {
+  const d = selectedDate.value
+  router.push({
+    path: '/statistics/categories',
+    query: {
+      year: d.getFullYear(),
+      month: d.getMonth() + 1
+    }
+  })
+}
+
+const goToTimeStats = () => {
+  const d = selectedDate.value
+  router.push({
+    path: '/statistics/time',
+    query: {
+      year: d.getFullYear(),
+      month: d.getMonth() + 1
+    }
+  })
+}
+
+const weeklyStats = ref([])
 const reactionStats = ref([])
 const recentVisits = ref([])
 
-// 색상 팔레트
-const categoryColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#D4A5A5', '#9B59B6']
+// 색상 팔레트 & 설정
+const categoryColors = ['#007AFF', '#3291FF', '#5E9EFF', '#8AB4FF', '#A6C8FF', '#C2DAFF', '#DEEAFF']
 const reactionConfig = {
-  ACCEPTED: { label: '승인', color: '#4ECDC4' },
-  REJECTED: { label: '재요청', color: '#FF6B6B' },
-  PENDING: { label: '보류', color: '#FFEAA7' }
+  ACCEPTED: { label: '승인', color: '#007AFF' },
+  REJECTED: { label: '재요청', color: '#FF3B30' },
+  PENDING: { label: '보류', color: '#FFCC00' }
 }
 
 // 데이터 로드
 const loadStatistics = async () => {
   try {
-    const now = new Date()
-    const from = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]
-    const to = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]
+    const d = selectedDate.value
+    const year = d.getFullYear()
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()
+    
+    const from = `${year}-${month}-01`
+    const to = `${year}-${month}-${lastDay}`
     
     const params = { from, to }
 
     // 병렬로 API 호출
-    const [categoriesRes, reactionsRes, recentRes] = await Promise.all([
+    // 병렬로 API 호출 (allSettled로 변경하여 하나가 실패해도 나머지는 로드되도록 함)
+    const results = await Promise.allSettled([
       statisticsApi.getMyCategoryStats(params),
+      statisticsApi.getMyWeeklyStats(params),
       statisticsApi.getMyReactionStats(params),
       statisticsApi.getMyRecentStats()
     ])
+
+    const categoriesRes = results[0].status === 'fulfilled' ? results[0].value : null
+    const weeklyRes = results[1].status === 'fulfilled' ? results[1].value : null
+    const reactionsRes = results[2].status === 'fulfilled' ? results[2].value : null
+    const recentRes = results[3].status === 'fulfilled' ? results[3].value : null
+
+    // 에러 로그 출력
+    results.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        const apiNames = ['Category', 'Weekly', 'Reaction', 'Recent']
+        console.error(`${apiNames[index]} API failed:`, result.reason)
+      }
+    })
 
     // 카테고리 통계 처리
     if (categoriesRes && categoriesRes.data) {
@@ -158,6 +274,28 @@ const loadStatistics = async () => {
       })).sort((a, b) => b.count - a.count)
     }
 
+    // 주간(요일별) 통계 처리
+    if (weeklyRes && weeklyRes.data) {
+      const maxCount = Math.max(...weeklyRes.data.map(item => item.value), 0)
+      
+      // 요일 순서 고정 (일~토)
+      const dayOrder = ['일', '월', '화', '수', '목', '금', '토']
+      
+      // 데이터 매핑 (없는 요일은 0으로 채움)
+      weeklyStats.value = dayOrder.map(day => {
+        const item = weeklyRes.data.find(d => d.label === day)
+        const count = item ? item.value : 0
+        // 최대값이 0이면 퍼센트 0, 아니면 비율 계산
+        const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0
+        
+        return {
+          label: day,
+          count: count,
+          percentage: percentage
+        }
+      })
+    }
+
     // 반응 통계 처리
     if (reactionsRes && reactionsRes.data) {
       const total = reactionsRes.data.reduce((sum, item) => sum + item.value, 0)
@@ -167,13 +305,17 @@ const loadStatistics = async () => {
       const acceptedItem = reactionsRes.data.find(item => item.label === 'ACCEPTED')
       stats.value.monthlyVisits = acceptedItem ? acceptedItem.value : 0
 
-      // 차트 데이터
-      reactionStats.value = reactionsRes.data.map(item => {
-        const config = reactionConfig[item.label] || { label: item.label, color: '#ccc' }
+      // 차트 데이터 (보류 제외)
+      const chartReactions = ['ACCEPTED', 'REJECTED']
+      reactionStats.value = chartReactions.map(label => {
+        const item = reactionsRes.data.find(r => r.label === label)
+        const count = item ? item.value : 0
+        const config = reactionConfig[label]
+        
         return {
           label: config.label,
-          count: item.value,
-          percentage: total > 0 ? Math.round((item.value / total) * 100) : 0,
+          count: count,
+          percentage: total > 0 ? Math.round((count / total) * 100) : 0,
           color: config.color
         }
       })
@@ -196,9 +338,9 @@ const getResultClass = (result) => {
 }
 
 const formatResult = (result) => {
+  if (result === 'PENDING') return '보류'
   if (result === 'ACCEPTED') return '승인'
   if (result === 'REJECTED') return '재요청'
-  return '보류'
 }
 
 onMounted(() => {
@@ -219,8 +361,9 @@ onMounted(() => {
   margin-bottom: 8px;
 }
 
+
 .summary-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-primary, #007AFF);
   border-radius: 16px;
   padding: 20px;
   color: white;
@@ -234,9 +377,28 @@ onMounted(() => {
 }
 
 .summary-header h3 {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-btn {
+  cursor: pointer;
+  opacity: 0.7;
+  font-size: 24px;
+  user-select: none;
+}
+
+.nav-btn:hover {
+  opacity: 1;
+}
+
+.nav-btn.disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
 }
 
 .period {
@@ -336,6 +498,53 @@ onMounted(() => {
   text-align: right;
 }
 
+/* 세로 바 차트 (요일별) */
+.col-chart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 180px;
+  padding: 10px 0;
+}
+
+.col-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.col-track {
+  width: 12px;
+  height: 120px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.col-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-radius: 6px;
+  transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(to top, #007AFF, #5AC8FA);
+}
+
+.col-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.col-value {
+  font-size: 11px;
+  color: #007AFF;
+  font-weight: 600;
+  margin-bottom: -4px;
+}
+
 /* 평점 차트 (재사용) */
 .rating-chart {
   display: flex;
@@ -350,9 +559,54 @@ onMounted(() => {
 }
 
 .rating-stars {
-  width: 32px;
+  width: 50px;
   font-size: 13px;
   color: #666;
+  white-space: nowrap;
+}
+
+/* 보류 박스 스타일 */
+.pending-box {
+  background: #FFF3CD;
+  border: 1px solid #FFE69C;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.pending-box:active {
+  transform: scale(0.98);
+}
+
+.pending-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pending-text {
+  font-weight: 600;
+  color: #856404;
+}
+
+.pending-count {
+  background: #856404;
+  color: white;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pending-sub {
+  font-size: 12px;
+  color: #856404;
+  opacity: 0.8;
 }
 
 .rating-track {
@@ -429,12 +683,34 @@ onMounted(() => {
   font-weight: 500;
 }
 
-.text-success { color: #4ECDC4; }
-.text-danger { color: #FF6B6B; }
-.text-warning { color: #FFEAA7; }
+.text-success { color: #007AFF; }
+.text-danger { color: #FF3B30; }
+.text-warning { color: #FFCC00; }
 
 .recent-date {
   font-size: 12px;
   color: #999;
+}
+
+/* 더보기 버튼 */
+.more-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+  cursor: pointer;
+}
+
+.more-text {
+  font-size: 12px;
+  color: #999;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background-color: #f5f5f5;
+  transition: all 0.2s ease;
+}
+
+.more-text:hover {
+  background-color: #e0e0e0;
+  color: #666;
 }
 </style>

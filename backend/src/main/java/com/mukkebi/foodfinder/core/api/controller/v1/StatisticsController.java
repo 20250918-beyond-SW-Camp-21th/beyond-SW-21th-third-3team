@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,50 +30,50 @@ public class StatisticsController {
 
     @GetMapping("/api/v1/stats/user/weekly")
     public ApiResult<List<StatisticsResponse>> getMyWeeklyStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @AuthenticationPrincipal OAuth2User oauth2User) {
         Long userId = resolveUserId(oauth2User);
-        return ApiResult.success(statisticsService.getWeeklyStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getWeeklyStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/user/category")
     public ApiResult<List<StatisticsResponse>> getMyCategoryStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @AuthenticationPrincipal OAuth2User oauth2User) {
         Long userId = resolveUserId(oauth2User);
-        return ApiResult.success(statisticsService.getCategoryStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getCategoryStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/user/hourly")
     public ApiResult<List<StatisticsResponse>> getMyHourlyStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @AuthenticationPrincipal OAuth2User oauth2User) {
         Long userId = resolveUserId(oauth2User);
-        return ApiResult.success(statisticsService.getHourlyStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getHourlyStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/user/review")
     public ApiResult<List<StatisticsResponse>> getMyReviewStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @AuthenticationPrincipal OAuth2User oauth2User) {
         Long userId = resolveUserId(oauth2User);
-        return ApiResult.success(statisticsService.getReviewStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getReviewStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/user/distance")
     public ApiResult<StatisticsResponse> getMyDistanceStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @AuthenticationPrincipal OAuth2User oauth2User) {
         Long userId = resolveUserId(oauth2User);
-        return ApiResult.success(statisticsService.getDistanceStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getDistanceStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/user/reaction")
     public ApiResult<List<StatisticsResponse>> getMyReactionStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @AuthenticationPrincipal OAuth2User oauth2User) {
         Long userId = resolveUserId(oauth2User);
-        return ApiResult.success(statisticsService.getReactionStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getReactionStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/user/recent")
@@ -88,49 +89,48 @@ public class StatisticsController {
         Long userId = resolveUserId(oauth2User);
         return ApiResult.success(statisticsService.getHomeStats(userId));
     }
-
     // --- [ Admin Endpoints: 전체/타인 통계 ] ---
 
     @GetMapping("/api/v1/stats/admin/weekly")
     public ApiResult<List<StatisticsResponse>> getWeeklyStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @RequestParam(required = false) Long userId) {
-        return ApiResult.success(statisticsService.getWeeklyStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getWeeklyStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/admin/category")
     public ApiResult<List<StatisticsResponse>> getCategoryStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @RequestParam(required = false) Long userId) {
-        return ApiResult.success(statisticsService.getCategoryStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getCategoryStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/admin/hourly")
     public ApiResult<List<StatisticsResponse>> getHourlyStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @RequestParam(required = false) Long userId) {
-        return ApiResult.success(statisticsService.getHourlyStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getHourlyStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/admin/review")
     public ApiResult<List<StatisticsResponse>> getReviewStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @RequestParam(required = false) Long userId) {
-        return ApiResult.success(statisticsService.getReviewStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getReviewStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/admin/distance")
     public ApiResult<StatisticsResponse> getDistanceStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @RequestParam(required = false) Long userId) {
-        return ApiResult.success(statisticsService.getDistanceStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getDistanceStats(request.getFrom(), request.getTo(), userId));
     }
 
     @GetMapping("/api/v1/stats/admin/reaction")
     public ApiResult<List<StatisticsResponse>> getReactionStats(
-            StatisticsRequest request,
+            @ModelAttribute StatisticsRequest request,
             @RequestParam(required = false) Long userId) {
-        return ApiResult.success(statisticsService.getReactionStats(request.from(), request.to(), userId));
+        return ApiResult.success(statisticsService.getReactionStats(request.getFrom(), request.getTo(), userId));
     }
 
     // Helper Method
