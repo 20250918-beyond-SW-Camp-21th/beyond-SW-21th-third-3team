@@ -28,7 +28,7 @@ export const authApi = {
    * 로그아웃
    */
   async logout() {
-    await api.get('v1/auth/logout')
+    await api.get('/v1/auth/logout')
   },
 }
 
