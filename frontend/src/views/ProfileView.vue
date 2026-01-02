@@ -356,7 +356,7 @@ const confirmWithdraw = async () => {
       }
     )
     
-    await userApi.deleteAccount()
+    await userApi.withdraw()
     await userStore.logout()
     router.push('/login')
     ElMessage.success('회원 탈퇴가 완료되었습니다')
