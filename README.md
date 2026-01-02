@@ -33,9 +33,9 @@
         <a href="https://github.com/L-dragon-woo">@L-dragon-woo</a>
       </td>
       <td align="center">
-        <img src="./images/김김성은.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
+        <img src="./images/김성은.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
         <br />
-        <b>임성은</b>
+        <b>김성은</b>
         <br />
         <a href="https://github.com/rlatjddms">@rlatjddms</a>
       </td>
