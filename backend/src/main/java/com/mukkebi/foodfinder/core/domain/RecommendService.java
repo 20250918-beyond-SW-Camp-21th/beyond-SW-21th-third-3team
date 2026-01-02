@@ -44,7 +44,7 @@ public class RecommendService {
         // 1. 해시태그 코드 → 설명(promptMessage) 조회
         List<HashTag> hashTags = hashTagRepository.findAllByCodeIn(request.hashTagCodes());
         if (hashTags.isEmpty()) {
-            //throw new CoreException(ErrorType.DEFAULT_ERROR, "선택한 해시태그를 찾을 수 없습니다.");
+            // throw new CoreException(ErrorType.DEFAULT_ERROR, "선택한 해시태그를 찾을 수 없습니다.");
         }
 
         List<String> hashTagDescriptions = hashTags.stream()
@@ -52,7 +52,8 @@ public class RecommendService {
                 .toList();
 
         // 2. 카카오맵 API로 음식점 후보 목록 조회
-        List<Restaurant> candidates = restaurantFinder.findNearBy(request.latitude(), request.longitude(), request.radius());
+        List<Restaurant> candidates = restaurantFinder.findNearBy(request.latitude(), request.longitude(),
+                request.radius());
 
         if (candidates.isEmpty()) {
             throw new CoreException(ErrorType.DEFAULT_ERROR, "주변에 추천할 음식점이 없습니다.");
@@ -96,8 +97,7 @@ public class RecommendService {
                 recommendedRestaurant.longitude(),
                 recommendedRestaurant.distance(),
                 aiResult.reason(),
-                aiResult.menu()
-        );
+                aiResult.menu());
         Recommend savedRecommend = recommendRepository.save(recommend);
 
         // 8. RestaurantDetailResponse 반환 (rating은 미구현 상태로 null)
@@ -125,9 +125,9 @@ public class RecommendService {
             Restaurant r = restaurants.get(i);
             sb.append(String.format(
                     "  {\"id\": \"%s\", \"name\": \"%s\", \"category\": \"%s\", \"distance\": %.0fm}",
-                    r.id(), r.name(), r.category(), r.distance()
-            ));
-            if (i < restaurants.size() - 1) sb.append(",");
+                    r.id(), r.name(), r.category(), r.distance()));
+            if (i < restaurants.size() - 1)
+                sb.append(",");
             sb.append("\n");
         }
         sb.append("]\n```\n\n");

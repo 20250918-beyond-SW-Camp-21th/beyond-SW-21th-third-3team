@@ -6,6 +6,16 @@ export const statisticsApi = {
     return api.get('/v1/stats/user/category', { params })
   },
 
+  // 요일별 통계
+  getMyWeeklyStats(params) {
+    return api.get('/v1/stats/user/weekly', { params })
+  },
+
+  // 시간대별 통계
+  getMyHourlyStats(params) {
+    return api.get('/v1/stats/user/hourly', { params })
+  },
+
   // 추천 반응 통계
   getMyReactionStats(params) {
     return api.get('/v1/stats/user/reaction', { params })

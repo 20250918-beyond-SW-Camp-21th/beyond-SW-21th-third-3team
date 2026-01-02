@@ -18,22 +18,36 @@ public class RecommendRepositoryImpl implements RecommendRepositoryCustom {
 
   @Override
   public List<StatisticsResponse> findWeeklyStats(LocalDate from, LocalDate to, Long userId) {
-    return em.createQuery("""
-        SELECT new com.mukkebi.foodfinder.core.api.controller.v1.response.StatisticsResponse(
-            CASE function('DAYOFWEEK', r.createdAt)
-                WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화'
-                WHEN 4 THEN '수' WHEN 5 THEN '목' WHEN 6 THEN '금'
-                WHEN 7 THEN '토' END, COUNT(r))
+    List<Object[]> results = em.createQuery("""
+        SELECT CAST(function('date_part', 'dow', r.createdAt) AS integer), COUNT(r)
         FROM Recommend r
         WHERE r.createdAt BETWEEN :from AND :to
         AND (:userId IS NULL OR r.userId = :userId)
-        GROUP BY function('DAYOFWEEK', r.createdAt)
-        ORDER BY function('DAYOFWEEK', r.createdAt)
-        """, StatisticsResponse.class)
+        GROUP BY CAST(function('date_part', 'dow', r.createdAt) AS integer)
+        ORDER BY CAST(function('date_part', 'dow', r.createdAt) AS integer)
+        """, Object[].class)
         .setParameter("from", from.atStartOfDay())
         .setParameter("to", to.atTime(LocalTime.MAX))
         .setParameter("userId", userId)
         .getResultList();
+
+    return results.stream()
+        .map(row -> {
+          Integer dow = (Integer) row[0];
+          Long count = (Long) row[1];
+          String label = switch (dow) {
+            case 0 -> "일";
+            case 1 -> "월";
+            case 2 -> "화";
+            case 3 -> "수";
+            case 4 -> "목";
+            case 5 -> "금";
+            case 6 -> "토";
+            default -> "Unknown";
+          };
+          return new StatisticsResponse(label, count);
+        })
+        .collect(java.util.stream.Collectors.toList());
   }
 
   @Override

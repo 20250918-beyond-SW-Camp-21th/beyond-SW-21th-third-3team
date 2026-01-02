@@ -108,7 +108,7 @@ public class Recommend extends BaseEntity {
                 .distance(distance)
                 .reason(reason)
                 .menu(menu)
-                .result(RecommendationResult.PENDING)  // 기본값: PENDING
+                .result(RecommendationResult.PENDING) // 기본값: PENDING
                 // 스냅샷 필드 자동 주입
                 .restaurantNameAtTime(restaurantName)
                 .categoryAtTime(category)

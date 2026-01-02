@@ -16,6 +16,7 @@ import java.util.List;
 public class StatisticsService {
 
     private final RecommendRepository recommendRepository;
+    private final RestaurantFinder restaurantFinder;
 
     // 1. 주간 통계 (요일별)
     public List<StatisticsResponse> getWeeklyStats(LocalDate from, LocalDate to, Long userId) {
