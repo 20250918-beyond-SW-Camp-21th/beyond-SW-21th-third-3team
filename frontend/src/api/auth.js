@@ -17,7 +17,7 @@ export const authApi = {
 
   /**
    * 로그인 성공 확인
-   * @returns {Promise<{userId: number, status: 'PENDING' | 'ACTIVE'}>}
+   * @returns {Promise<{userId: number, userStatus: 'PENDING' | 'ACTIVE'}>}
    */
   async checkLoginSuccess() {
     const response = await api.get('/v1/auth/login-success')
@@ -28,7 +28,7 @@ export const authApi = {
    * 로그아웃
    */
   async logout() {
-    await api.get('v1/auth/logout')
+    await api.get('/v1/auth/logout')
   },
 }
 

@@ -28,7 +28,7 @@ export const useUserStore = defineStore('user', () => {
       const data = await authApi.checkLoginSuccess()
       isAuthenticated.value = true
       userId.value = data.userId
-      userStatus.value = data.status
+      userStatus.value = data.userStatus
       return data
     } catch (error) {
       isAuthenticated.value = false
