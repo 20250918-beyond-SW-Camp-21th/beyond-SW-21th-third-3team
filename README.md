@@ -219,7 +219,11 @@
 
 ## 5. 요구사항 명세서
 
+<img width="1579" height="587" alt="image" src="https://github.com/user-attachments/assets/b1368398-1864-4a8d-81f0-2f9a49e5638f" />
+
 ## 6. 테스트케이스 명세서
+
+<img width="2672" height="582" alt="image" src="https://github.com/user-attachments/assets/b8a9c44d-0cce-4bf3-a61d-aa230a7c6910" />
 
 ## 7. 회고록
 
