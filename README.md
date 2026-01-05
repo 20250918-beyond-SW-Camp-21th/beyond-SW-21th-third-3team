@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="frontend/src/images/FFlogo.png" alt="FoodFinder Logo" width="300"/>
+  <img src="/images/FFlogo.png" alt="FoodFinder Logo" width="300"/>
   <h1 style="color:#2F5D7B;">오늘 뭐 먹지?</h1>
   <p style="font-size:1.2em; color:#555;">
-    FoodFinder는 AI 기반 음식점 추천 서비스입니다. </br>
+    FoodFinder는 AI 기반 음식점 추천 서비스입니다. <br>
     사용자의 취향(해시태그)과 위치 정보를 기반으로 주변 음식점을 검색하여 최적의 음식점을 추천합니다 <br>
   </p>
 </div>
@@ -23,7 +23,7 @@
         <br />
         <b>이관호</b>
         <br />
-        <a href="https://github.com/Apeirogon99">@L-dragon-woo</a>
+        <a href="https://github.com/Apeirogon99">@Apeirogon99</a>
       </td>
       <td align="center">
         <img src="./images/이용우.jpg" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
