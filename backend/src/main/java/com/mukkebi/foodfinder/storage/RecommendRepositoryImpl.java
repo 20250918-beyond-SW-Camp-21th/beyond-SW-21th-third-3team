@@ -1,0 +1,185 @@
+package com.mukkebi.foodfinder.storage;
+
+import com.mukkebi.foodfinder.core.api.controller.v1.response.RecentActivityResponse;
+import com.mukkebi.foodfinder.core.api.controller.v1.response.StatisticsResponse;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+@Repository
+@RequiredArgsConstructor
+public class RecommendRepositoryImpl implements RecommendRepositoryCustom {
+
+  private final EntityManager em;
+
+  @Override
+  public List<StatisticsResponse> findWeeklyStats(LocalDate from, LocalDate to, Long userId) {
+    List<Object[]> results = em.createQuery("""
+        SELECT CAST(function('date_part', 'dow', r.createdAt) AS integer), COUNT(r)
+        FROM Recommend r
+        WHERE r.createdAt BETWEEN :from AND :to
+        AND (:userId IS NULL OR r.userId = :userId)
+        GROUP BY CAST(function('date_part', 'dow', r.createdAt) AS integer)
+        ORDER BY CAST(function('date_part', 'dow', r.createdAt) AS integer)
+        """, Object[].class)
+        .setParameter("from", from.atStartOfDay())
+        .setParameter("to", to.atTime(LocalTime.MAX))
+        .setParameter("userId", userId)
+        .getResultList();
+
+    return results.stream()
+        .map(row -> {
+          Integer dow = (Integer) row[0];
+          Long count = (Long) row[1];
+          String label = switch (dow) {
+            case 0 -> "일";
+            case 1 -> "월";
+            case 2 -> "화";
+            case 3 -> "수";
+            case 4 -> "목";
+            case 5 -> "금";
+            case 6 -> "토";
+            default -> "Unknown";
+          };
+          return new StatisticsResponse(label, count);
+        })
+        .collect(java.util.stream.Collectors.toList());
+  }
+
+  @Override
+  public List<StatisticsResponse> findCategoryStats(LocalDate from, LocalDate to, Long userId) {
+    List<StatisticsResponse> rawStats = em.createQuery("""
+        SELECT new com.mukkebi.foodfinder.core.api.controller.v1.response.StatisticsResponse(r.category, COUNT(r))
+          FROM Recommend r
+         WHERE r.createdAt BETWEEN :from AND :to
+           AND (:userId IS NULL OR r.userId = :userId)
+         GROUP BY r.category
+        """, StatisticsResponse.class)
+        .setParameter("from", from.atStartOfDay())
+        .setParameter("to", to.atTime(LocalTime.MAX))
+        .setParameter("userId", userId)
+        .getResultList();
+
+    java.util.Map<String, Long> aggregated = new java.util.HashMap<>();
+    for (StatisticsResponse stat : rawStats) {
+      if (stat.label() == null)
+        continue;
+      String[] parts = stat.label().split(" > ");
+      String mainCategory = parts.length > 1 ? parts[1] : parts[0];
+      aggregated.merge(mainCategory, stat.value(), Long::sum);
+    }
+
+    return aggregated.entrySet().stream()
+        .map(entry -> new StatisticsResponse(entry.getKey(), entry.getValue()))
+        .collect(java.util.stream.Collectors.toList());
+  }
+
+  @Override
+  public List<StatisticsResponse> findHourlyStats(LocalDate from, LocalDate to, Long userId) {
+    return em.createQuery("""
+        SELECT new com.mukkebi.foodfinder.core.api.controller.v1.response.StatisticsResponse(
+            CAST(function('date_part', 'hour', r.createdAt) AS integer), COUNT(r))
+          FROM Recommend r
+         WHERE r.createdAt BETWEEN :from AND :to
+           AND (:userId IS NULL OR r.userId = :userId)
+         GROUP BY CAST(function('date_part', 'hour', r.createdAt) AS integer)
+         ORDER BY CAST(function('date_part', 'hour', r.createdAt) AS integer)
+        """, StatisticsResponse.class)
+        .setParameter("from", from.atStartOfDay())
+        .setParameter("to", to.atTime(LocalTime.MAX))
+        .setParameter("userId", userId)
+        .getResultList();
+  }
+
+  @Override
+  public List<StatisticsResponse> findReviewStats(LocalDate from, LocalDate to, Long userId) {
+    return em.createQuery("""
+        SELECT new com.mukkebi.foodfinder.core.api.controller.v1.response.StatisticsResponse(
+            rv.rating, COUNT(rv))
+          FROM Review rv
+         WHERE rv.createdAt BETWEEN :from AND :to
+           AND (:userId IS NULL OR rv.userId = :userId)
+         GROUP BY rv.rating
+         ORDER BY rv.rating DESC
+        """, StatisticsResponse.class)
+        .setParameter("from", from.atStartOfDay())
+        .setParameter("to", to.atTime(LocalTime.MAX))
+        .setParameter("userId", userId)
+        .getResultList();
+  }
+
+  @Override
+  public StatisticsResponse findDistanceStats(LocalDate from, LocalDate to, Long userId) {
+    try {
+      return em.createQuery("""
+          SELECT new com.mukkebi.foodfinder.core.api.controller.v1.response.StatisticsResponse(
+              '평균 이동 거리', CAST(AVG(r.distance) AS Long))
+            FROM Recommend r
+           WHERE r.createdAt BETWEEN :from AND :to
+             AND (:userId IS NULL OR r.userId = :userId)
+          """, StatisticsResponse.class)
+          .setParameter("from", from.atStartOfDay())
+          .setParameter("to", to.atTime(LocalTime.MAX))
+          .setParameter("userId", userId)
+          .getSingleResult();
+    } catch (Exception e) {
+      return new StatisticsResponse("평균 이동 거리", 0L);
+    }
+  }
+
+  @Override
+  public List<StatisticsResponse> findReactionStats(LocalDate from, LocalDate to, Long userId) {
+    return em.createQuery("""
+        SELECT new com.mukkebi.foodfinder.core.api.controller.v1.response.StatisticsResponse(
+            r.result, COUNT(r))
+          FROM Recommend r
+         WHERE r.createdAt BETWEEN :from AND :to
+           AND (:userId IS NULL OR r.userId = :userId)
+         GROUP BY r.result
+         ORDER BY r.result
+        """, StatisticsResponse.class)
+        .setParameter("from", from.atStartOfDay())
+        .setParameter("to", to.atTime(LocalTime.MAX))
+        .setParameter("userId", userId)
+        .getResultList();
+  }
+
+  @Override
+  public List<RecentActivityResponse> findRecentStats(Long userId, int limit) {
+    return em.createQuery("""
+        SELECT new com.mukkebi.foodfinder.core.api.controller.v1.response.RecentActivityResponse(
+            r.id, r.restaurantName, r.category, r.createdAt, r.result)
+          FROM Recommend r
+         WHERE (:userId IS NULL OR r.userId = :userId)
+         ORDER BY r.createdAt DESC
+        """, RecentActivityResponse.class)
+        .setParameter("userId", userId)
+        .setMaxResults(limit)
+        .getResultList();
+  }
+
+  @Override
+  public com.mukkebi.foodfinder.core.api.controller.v1.response.HomeStatisticsResponse findHomeStats(Long userId) {
+    Long reviewCount = em.createQuery("SELECT COUNT(r) FROM Review r WHERE r.userId = :userId", Long.class)
+        .setParameter("userId", userId)
+        .getSingleResult();
+
+    Long visitCount = em
+        .createQuery("SELECT COUNT(r) FROM Recommend r WHERE r.userId = :userId AND r.result = 'ACCEPTED'", Long.class)
+        .setParameter("userId", userId)
+        .getSingleResult();
+
+    Long recommendCount = em.createQuery("SELECT COUNT(r) FROM Recommend r WHERE r.userId = :userId", Long.class)
+        .setParameter("userId", userId)
+        .getSingleResult();
+
+    return new com.mukkebi.foodfinder.core.api.controller.v1.response.HomeStatisticsResponse(
+        reviewCount != null ? reviewCount : 0L,
+        visitCount != null ? visitCount : 0L,
+        recommendCount != null ? recommendCount : 0L);
+  }
+}

@@ -35,5 +35,16 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Node ###
+node_modules/
+dist/
+*.log
+npm-debug.log*
+
+### 환경 설정 파일 (민감 정보) ###
 /backend/src/main/resources/application-local.yml
 /frontend/.env
