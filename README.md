@@ -13,35 +13,35 @@
   <table border="0" style="border: none; width: 80%;">
     <tr>
       <td align="center">
-        <img src="./images/이건우.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
+        <img src="frontend/src/images/guntinue.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
         <br />
         <b>이건우</b>
         <br />
         <a href="https://github.com/guntinue">@guntinue</a>
       </td>
       <td align="center">
-        <img src="./images/이관호.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
+        <img src="frontend/src/images/Apeirogon99.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
         <br />
         <b>이관호</b>
         <br />
         <a href="https://github.com/Apeirogon99">@Apeirogon99</a>
       </td>
       <td align="center">
-        <img src="./images/이용우.jpg" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
+        <img src="frontend/src/images/L-dragon-woo.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
         <br />
         <b>이용우</b>
         <br />
         <a href="https://github.com/L-dragon-woo">@L-dragon-woo</a>
       </td>
       <td align="center">
-        <img src="./images/김성은.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
+        <img src="frontend/src/images/rlatjddms.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
         <br />
         <b>김성은</b>
         <br />
         <a href="https://github.com/rlatjddms">@rlatjddms</a>
       </td>
         <td align="center">
-        <img src="./images/임재열.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
+        <img src="frontend/src/images/Jae-yeol1.png" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;" />
         <br />
         <b>임재열</b>
         <br />
